@@ -4,27 +4,27 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-- Cycle 3 (2026-10-26):
-  - [A] offline mode: one `backendEnabled` gate on every dead-backend call, plus the spector CDN load and a runtime check of the mission list for the Twilio missions;
-  - [A] hygiene: `local_config.template.js` keys, retiring `tasks/update_bundled_extensions.js`, declaring `ws`;
-  - [C] `docs/security.md`.
-  All three are Sonnet agents, each in its own worktree.
+(nothing; cycle 3 finished)
 
 ## Backlog (ranked)
 
 1. [A] `dev_skills`: BLOCKED on a user decision (see below).
-4. [B] Hide Twilio-account missions: API Setup, Voice, Messaging (decision 3). Audit finding: all three are in `twilioquest-twilio-vr` (`basic_training`, `programmable_voice`, `twilio_messaging`). That package is NOT in `bundledExtensionModules.json`, so it is probably never loaded, which would mean they are already hidden. Still to do: confirm at runtime that the Mission Computer does not list them, and record in docs how they would be re-enabled. Voice and Messaging have the prereq `basic_training.basic4`. No mission-level `hidden` flag exists; only objectives have `hidden`.
-5. [B] Uncompletable objectives that remain: api-academy and base `/quest/magic` and `/quest/ducktypium-diagnostics` endpoints (03-debugging-3, api-03..05). `skills_plant_tree1` is moot, because it is in the unloaded dev_skills level.
+4. [B] DONE, verified at runtime in cycle 3: the Twilio-account missions are hidden. Over CDP, the 12 loaded levels do not include `basic_training`, `programmable_voice` or `twilio_messaging`, and the Mission Computer and nav map don't list them. To re-enable them, add `twilioquest-twilio-vr` to `bundledExtensionModules.json`; write that down in the authoring docs. Original note: API Setup, Voice, Messaging (decision 3). Audit finding: all three are in `twilioquest-twilio-vr` (`basic_training`, `programmable_voice`, `twilio_messaging`). That package is NOT in `bundledExtensionModules.json`, so it is probably never loaded, which would mean they are already hidden. Still to do: confirm at runtime that the Mission Computer does not list them, and record in docs how they would be re-enabled. Voice and Messaging have the prereq `basic_training.basic4`. No mission-level `hidden` flag exists; only objectives have `hidden`.
+5. [B] Content still calls the dead backend (cycle 3 list, unchanged):
+   - `twilioquest-base/levels/fog_owl/objectives/owl_plant_tree1/validator.js:3-4` POSTs to `/quest/tracking/trees`. It is in a LOADED level and fails offline with "Something went wrong". Check whether it is already `hidden`; if not, hide it (allowed without approval).
+   - `twilioquest-base/levels/challenge-questions/objectives/03-debugging-3/validator.js:76` uses `twilio.com/quest/ducktypium-diagnostics`.
+   - `twilioquest-api-academy/scripts/config.js:5-6` uses `twilio.com/quest/magic` and `/magic/divination` (used by api-03, api-04 and api-05). `ValidationHelper.fetchOverride` already fakes `/quest/magic/divination` locally; check how far that covers these.
+   Uncompletable objectives that remain: api-academy and base `/quest/magic` and `/quest/ducktypium-diagnostics` endpoints (03-debugging-3, api-03..05). `skills_plant_tree1` is moot, because it is in the unloaded dev_skills level.
    - Cycle 2 audit, `green-keycard`: the objective is **unreferenced**. No map, level.json objective list or events file refers to it, so it is dead code that cannot block the player. Its validator is an empty stub and its walkthrough is a copy of Twilio account setup. Recommendation: leave it, or hide or remove it with approval. Keycard gating is actually done by `objects/keycard-terminal`, and the scientist conversation grants `green`.
    - Cycle 2 audit, `07_sync_master`: `twilio-labs/open-pixel-art` exists, its default branch is `master` (checked with `git ls-remote`), and it did not look archived. The validator is completable as written.
    - Lead to play-test (from code, unverified): on the JS `visitor-signin` map, 3 keycard terminals (ids 203, 204, 206) need `blue`. Nothing grants `blue`, and they have no `targetKey`, so they look like intentionally locked props. The green terminals 191 and 205 seem to rely on tileset default properties (`accessLevel: green`); I haven't confirmed the engine merges those. Confirm in a JS mission play-test.
 6. [A] Needs a play-test: drive a real objective through the hack UI to see the validator timeout and fail paths, and confirm game input resumes after a failed objective load.
-8. [A] Dead-backend features fail quietly offline: cloud sync (verify shows `user-sync` 404 on every launch), unlock codes, teams, live events. Also check why the dev build loads `spectorcdn.babylonjs.com/spector.bundle.js` (a cert error on every launch).
+8. [A] DONE in cycle 3 (see Done). Original note: cloud sync (verify shows `user-sync` 404 on every launch), unlock codes, teams, live events. Also check why the dev build loads `spectorcdn.babylonjs.com/spector.bundle.js` (a cert error on every launch).
 7b. [A] **The QuestIDE code runner may be broken (from code, unverified at runtime):** the hidden runner window (`common/code_runner.js:26-30`) sets only `nodeIntegration`, without `enableRemoteModule`, but `public/code_runner/runner.js:41` calls `require('electron').remote.BrowserWindow` in `log()`. On Electron 11, `remote` is off by default, so a learner's `console.log` may throw. Needs a runtime check (run code in the in-game editor) and then a fix. The Electron upgrade will replace this with IPC anyway.
-8b. [A] Declare `ws` in root `devDependencies`; `tasks/verify.js` uses it, and it is only a transitive dependency today.
-9. [A] Fix `local_config.template.js`: stale keys (`initialLevelName` -> `defaultLevelName` plus the `*Prologue` variants) and the dead `apiBaseUrl` (drop it; dev rewrites to the dev host anyway).
-9b. [A] Retire or rewrite `tasks/update_bundled_extensions.js` (it runs `npm install <name>@latest` in `public/`, which would undo the vendoring). Check that `tasks/create_release.js` follows the `public/node_modules` symlinks (unverified).
-10. [C] `docs/security.md`: security model, only enable extensions you wrote or read (decision 4).
+8b. [A] DONE in cycle 3. Original note: Declare `ws` in root `devDependencies`; `tasks/verify.js` uses it, and it is only a transitive dependency today.
+9. [A] DONE in cycle 3. Original note: stale keys (`initialLevelName` -> `defaultLevelName` plus the `*Prologue` variants) and the dead `apiBaseUrl` (drop it; dev rewrites to the dev host anyway).
+9b. [A] DONE in cycle 3 (the task was retired). Still open: whether `tasks/create_release.js` handles the `public/node_modules` symlinks (node-tar, unverified). Original note: Retire or rewrite `tasks/update_bundled_extensions.js` (it runs `npm install <name>@latest` in `public/`, which would undo the vendoring). Check that `tasks/create_release.js` follows the `public/node_modules` symlinks (unverified).
+10. [C] DONE in cycle 3. Original note: security model, only enable extensions you wrote or read (decision 4).
 11. [B] Dead links (nodejs.org arg parsing x5, `github.com/twilio/twilioquest`, others in HANDOFF 3.4); Linux gaps (`js_node_workspace`, `terminal_cd`, `js_unlock_door`); `create_repo` git identity step; Python 3.7 text. Needs vendoring.
 12. [A] Swap `node-sass` for `sass`; drop Python pin if possible.
 13. [A] Drop dead deps: `vm2`, `@electron/remote`, `@sendgrid/*`, `universal-analytics`, unused Babel plugins.
@@ -79,6 +79,14 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - **Test baseline is now: 5 suites, 49 tests, all passing.** Orchestrator ran `npm run verify` in the main checkout: build OK, 49/49, smoke OK, and the screenshot shows the title screen.
 
 - `docs/security.md` (cherry-picked from `ec838b4`) [C]: the security model in plain English, the rule about which extensions to trust, an authoring checklist, accepted risks, and a pointer from CLAUDE.md. Verified against code: 11 `dangerouslySetInnerHTML` sites, none sanitized; Pug and EJS templates execute JS.
+
+- `86aa2e5` [A] `local_config.template.js` now shows the real `default*` keys and the prologue precedence (`levelLoader.js:90-95`, `Game.jsx:101-107`), and drops the dead `apiBaseUrl`.
+- `93917ac` [A] `ws` declared in root devDependencies (lockfile +2/-1).
+- `1c39b61` [A] retired `tasks/update_bundled_extensions.js`, which would have undone the vendoring.
+- `2395245`, `edc97f0`, `1ddcffe` [A] offline mode: `config.backendEnabled` defaults to false, through `common/backend.js` `isBackendEnabled()`. With it off: no user-sync, team and operation joins and unlock codes show "Online features are not available in this version.", and there are no live-event Firestore calls. `gameEvents` and analytics were already no-ops.
+- `b0cfb25` [A] the Spector.js WebGL debugger loaded from a CDN on every dev launch. It now loads only with `enableSpector`.
+- Runtime check by the agent over CDP: 53 requests in 20 s, all `file://`, so zero remote requests. Orchestrator ran `npm run verify` on the merged branch: build OK, tests 52/52 (6 suites), smoke OK, **0 console errors** (it was 2).
+- FYI: the Mission Computer lists only one mission, "Raid the Dark Ducktypium Forge". The other content shows up as nav-map destinations: Tower of Infinite Knowledge, API Academy, JavaScript Test Lab, Forest of Open Source and Pythonic Temple.
 
 ## Blocked
 
