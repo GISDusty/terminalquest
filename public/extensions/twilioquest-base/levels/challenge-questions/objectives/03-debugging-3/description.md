@@ -15,7 +15,7 @@ It looks like this section of the forge repairs the software bugs caused by expo
 
 The `findLongestDiagnosticUrl` function takes an array of reservoir objects. These objects contain a bunch of metadata describing the state of the reservoirs.
 
-Each reservoir object has a [corresponding diagnostic URL](https://www.twilio.com/quest/ducktypium-diagnostics). Metadata from the reservoir is put into the query params of the URL to display correct information.
+Each reservoir object has a corresponding diagnostic URL, built from `https://www.twilio.com/quest/ducktypium-diagnostics`. Metadata from the reservoir is put into the query params of the URL to display correct information.
 
 This function should return the longest diagnostic URL from the list of provided URLs.
 
