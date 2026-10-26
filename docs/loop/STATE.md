@@ -4,7 +4,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 5 finished)
+(nothing; cycle 6 finished)
 
 ## Backlog (ranked)
 
@@ -31,17 +31,30 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 9. [A] DONE in cycle 3. Original note: stale keys (`initialLevelName` -> `defaultLevelName` plus the `*Prologue` variants) and the dead `apiBaseUrl` (drop it; dev rewrites to the dev host anyway).
 9b. [A] DONE in cycle 3 (the task was retired). Still open: whether `tasks/create_release.js` handles the `public/node_modules` symlinks (node-tar, unverified). Original note: Retire or rewrite `tasks/update_bundled_extensions.js` (it runs `npm install <name>@latest` in `public/`, which would undo the vendoring). Check that `tasks/create_release.js` follows the `public/node_modules` symlinks (unverified).
 10. [C] DONE in cycle 3. Original note: security model, only enable extensions you wrote or read (decision 4).
-11. [B] Dead links (nodejs.org arg parsing x5, `github.com/twilio/twilioquest`, others in HANDOFF 3.4); Linux gaps (`js_node_workspace`, `terminal_cd`, `js_unlock_door`); `create_repo` git identity step; Python 3.7 text. Needs vendoring.
+11. [B] Mostly DONE in cycle 6 (see Done). Remaining:
+   - 4 extension `README.md` files link to the 404 `github.com/twilio/twilioquest`;
+   - dead links with no replacement: boredapi (flavour text), open-pixel-art.com, yourfirstpr (both optional);
+   - leftover version samples (`Versions/3.7` Mac path, `Python 3.7.4` REPL banner, `git version 2.22.0`);
+   - `terminal_cd` Linux gap, which is in unloaded dev_skills.
+   Optional proposal: link the current Microsoft Store Python Install Manager (`apps.microsoft.com/detail/9nq7512cxl7t`) instead of the docs.python.org Windows page. Not verified.
+11-old. [B] Dead links (nodejs.org arg parsing x5, `github.com/twilio/twilioquest`, others in HANDOFF 3.4); Linux gaps (`js_node_workspace`, `terminal_cd`, `js_unlock_door`); `create_repo` git identity step; Python 3.7 text. Needs vendoring.
 12. [A] DONE in cycle 4 (see Done).
 12a. [A] DONE in cycle 5 (see Done). Original note: **Reproducible install hazard (found in cycle 4, high priority):** root `postinstall` runs `install:app` = `cd ./public && npm install`. In a fresh worktree this ignored `public/package-lock.json`, pulled cheerio 1.2.0 (which needs `node:stream`, too new for Electron 11's Node) and rewrote the lockfile. The app then hung on "Loading" until `npm ci` restored cheerio rc.10. Fix: make `install:app` use `npm ci` (or pin cheerio), then confirm a clean clone with `npm install` gives a working game. Also, `npm install --ignore-scripts` at the root flips `dev` to `extraneous` flags on npm's bundled deps in the lockfile; this is harmless churn, so discard it.
 12b. [A] Sass deprecations: 30 `@import`, 2 `lighten`/`darken` (`_Inventory.scss:5`, `_ItemPopover.scss:8`). Migrate to `@use` and `color.adjust` sometime; low priority.
 13. [A] DONE in cycle 5 (see Done). Kept: `express`, `body-parser`, `jimp` and `got` (not traced fully; possibly removable), plus `@babel/runtime*` (needed by `corejs: 2`). Follow-up: test whether `legacy-peer-deps` is still needed now that `@electron/remote` is gone. Original note: Drop dead deps: `vm2`, `@electron/remote`, `@sendgrid/*`, `universal-analytics`, unused Babel plugins.
-14. [A] Replace Jest 26 / `@jest-runner/electron` / Enzyme (prereq for React and Electron upgrades).
+14. [A] Replace Jest 26, `@jest-runner/electron` and Enzyme; this is the prerequisite for the React and Electron upgrades. The cycle 6 audit is done (I spot-checked the setup and Enzyme claims). The plan:
+   - Facts: no test needs a real Electron API, because the `setup.js` stub covers `remote.app`. Enzyme is used once, in `Button.test.js` (`shallow`, plus one class assertion). `setup.js` `window.eval`s phaser and firebase from `public/lib`, so every suite needs a window, which means jsdom.
+   - (1) Swap the runner to `jest-environment-jsdom@26` and keep the electron stub. Risk: phaser `eval` under jsdom.
+   - (2) Replace Enzyme with `@testing-library/react@12.1.5` (the only line that supports React 16 and Node 18; pair with `@testing-library/dom@^8`). Use a plain DOM assertion, or `@testing-library/jest-dom@5.17.0`. Then drop `enzyme`, the adapter, and the adapter lines in `setup.js`. Risk: a duplicate React if RTL resolves from the root, since React lives in `public/node_modules`.
+   - (3) Jest 26 to 29.7, together with babel-jest and jest-environment-jsdom. Re-run the `runValidator` timing tests.
+   - (4) Remove `@jest-runner/electron`; the Electron upgrade is then unblocked.
+   - (5) Later, with React 18: RTL 14 or 16, `@testing-library/dom@10`, jest-dom 6.
 15. [A] Electron 11 -> current: preload + IPC instead of `remote` (app files, `public/code_runner/runner.js`, vendored `twilioquest-python/scripts/objectiveValidation.js`).
 16. [A] Node 18 -> current LTS.
 17. [A] React 16 -> 18+ (after Enzyme is gone).
 18. [A] Babel `corejs: 2` config.
-19. [C] Authoring docs from upstream `extension-docs` and `twilioquest-extension-template`; Rust mission guide.
+19a. [A/C] `npm run scaffold:mission` writes to `public/levels/<name>/`, which is not loaded. Its `level.json` also has no `objectives` list, and it uses the old `entities/` layout. Point it at an extension (e.g. a user extension dir or a new in-repo `public/extensions/<name>`) and update the template. Registering a new in-repo extension takes 4 steps (unverified).
+19. [C] Authoring docs: DONE in cycle 6 (except the Rust guide, which is next). Original note: Authoring docs from upstream `extension-docs` and `twilioquest-extension-template`; Rust mission guide.
 20. [C] CI running `npm run verify` on the fork.
 
 ## Test baseline (2026-10-25, revival @ 22a60ee)
@@ -108,6 +121,12 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - `7443407` [A] **Install hazard fixed.** Root cause: the root devDependency `"npm": "^6.14.8"` put npm 6 first on PATH inside npm scripts, so the nested `public/` install ran under npm 6, which ignores the v3 lockfile, re-resolved everything and pulled cheerio 1.2.0. The npm devDependency is removed. The new `tasks/install_app.js` runs `npm ci` in `public/` with the invoking npm (`npm_execpath`). Agent's clean-clone proof: `npm install` and `npm ci` both left the lockfile untouched, with cheerio rc.10 and verify passing.
 - `fffdc56`, `80831c3`, `a9451b8` [A] removed dead deps: `vm2`, `@sendgrid/*`, `universal-analytics` (`analytics.js` is now a no-op with the same exports), `@electron/remote`, `i`, `babel-plugin-file-loader`, `babel-plugin-module-resolver` and `react-dev-utils`. That is 50 packages fewer in `public/` and 81 fewer at the root, with no kept package changing version. Require check over `public/extensions` and `public/code_runner`: 68 requires, 0 unresolved.
 - Orchestrator re-synced the main checkout with a plain root `npm install`: lockfiles untouched, npm 6 gone from `.bin`, cheerio rc.10. `npm run verify`: build OK, 52/52, smoke OK, 0 console errors.
+
+- `2a8b90f` [B] link fixes. Checked 208 unique lesson URLs: about 194 OK, 7 blocked to curl (403), 7 dead. Fixed: the nodejs.org argv page in 4 JS walkthroughs; the dead Microsoft Store Python 3.7 listing, now docs.python.org/3/using/windows.html; fullstackpython (missing TLD); the groundskeeper `<a ref=` typo plus its link; **sci-hub proxy links** in api-04 and book-1..4.pug, now DOI or publisher links taken from the original URLs (I checked; the DOIs answer 403/418 to curl, so they are unverified by curl); `docs.python.org/3.7` changed to `/3`.
+- `2e56ca6` [B] Linux instructions in js_node_workspace, js_unlock_door, 03_install_git, python_basics_install and python_basics_hello. `9069b2e` adds a git identity note (`git config --global user.name/email`) to create_repo. `00d378c` changes "latest Python 3.7.4" to "any recent Python 3". All 23 changed files pass an EJS/pug render check.
+- `eaf6499` [C] **authoring docs**: `docs/authoring/` (README, extension, mission, objective, validator, map, about 1600 lines), adapted from upstream MIT `extension-docs` and the extension template (attribution plus licence included) and checked against our code, with "Differs from upstream" notes. Path checker: 0 missing. The validator mock recipe was run (11/11). Correction to an earlier ledger note: the `objectives` manifest does not gate opening a terminal (`HackInterface` reads `objective.json` directly). It drives XP, percent and completion only.
+- [A] test-stack migration audit (plan under backlog item 14).
+- Orchestrator ran `npm run verify` after the merges: build OK, 52/52, smoke OK, 0 console errors.
 
 ## Blocked
 
