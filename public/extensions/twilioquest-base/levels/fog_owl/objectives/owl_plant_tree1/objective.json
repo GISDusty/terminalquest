@@ -10,6 +10,7 @@
     }
   ],
   "show_ide": false,
+  "hidden": true,
   "rewards": {
     "xp": 100
   }
