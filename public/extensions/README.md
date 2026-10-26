@@ -7,6 +7,8 @@ repository. `public/package.json` points at them with `file:extensions/<name>`,
 so `npm install` links them into `public/node_modules` instead of downloading
 and overwriting them.
 
+The content is no longer updated from npm. The old task that ran `npm install <name>@latest` was removed, because it would replace these links with registry copies.
+
 **Lesson fixes go here, in `public/extensions/<name>/`. Never edit
 `public/node_modules`; it is a generated install directory.**
 
