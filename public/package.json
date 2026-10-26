@@ -50,7 +50,6 @@
     "twilioquest-open-source": "file:extensions/twilioquest-open-source",
     "twilioquest-python": "file:extensions/twilioquest-python",
     "twilioquest-twilio-vr": "^1.1.4",
-    "universal-analytics": "^0.4.20",
     "uuid": "^3.3.2",
     "yup": "^0.29.1"
   }
