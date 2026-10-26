@@ -9,8 +9,6 @@
   "dependencies": {
     "@babel/runtime": "^7.4.2",
     "@babel/runtime-corejs2": "^7.4.2",
-    "@sendgrid/client": "^6.3.0",
-    "@sendgrid/mail": "^6.3.1",
     "animate.css": "^4.1.1",
     "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
@@ -54,7 +52,6 @@
     "twilioquest-twilio-vr": "^1.1.4",
     "universal-analytics": "^0.4.20",
     "uuid": "^3.3.2",
-    "vm2": "^3.8.2",
     "yup": "^0.29.1"
   }
 }
