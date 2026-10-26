@@ -4,7 +4,11 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 2 finished)
+- Cycle 3 (2026-10-26):
+  - [A] offline mode: one `backendEnabled` gate on every dead-backend call, plus the spector CDN load and a runtime check of the mission list for the Twilio missions;
+  - [A] hygiene: `local_config.template.js` keys, retiring `tasks/update_bundled_extensions.js`, declaring `ws`;
+  - [C] `docs/security.md`.
+  All three are Sonnet agents, each in its own worktree.
 
 ## Backlog (ranked)
 
@@ -16,6 +20,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
    - Lead to play-test (from code, unverified): on the JS `visitor-signin` map, 3 keycard terminals (ids 203, 204, 206) need `blue`. Nothing grants `blue`, and they have no `targetKey`, so they look like intentionally locked props. The green terminals 191 and 205 seem to rely on tileset default properties (`accessLevel: green`); I haven't confirmed the engine merges those. Confirm in a JS mission play-test.
 6. [A] Needs a play-test: drive a real objective through the hack UI to see the validator timeout and fail paths, and confirm game input resumes after a failed objective load.
 8. [A] Dead-backend features fail quietly offline: cloud sync (verify shows `user-sync` 404 on every launch), unlock codes, teams, live events. Also check why the dev build loads `spectorcdn.babylonjs.com/spector.bundle.js` (a cert error on every launch).
+7b. [A] **The QuestIDE code runner may be broken (from code, unverified at runtime):** the hidden runner window (`common/code_runner.js:26-30`) sets only `nodeIntegration`, without `enableRemoteModule`, but `public/code_runner/runner.js:41` calls `require('electron').remote.BrowserWindow` in `log()`. On Electron 11, `remote` is off by default, so a learner's `console.log` may throw. Needs a runtime check (run code in the in-game editor) and then a fix. The Electron upgrade will replace this with IPC anyway.
 8b. [A] Declare `ws` in root `devDependencies`; `tasks/verify.js` uses it, and it is only a transitive dependency today.
 9. [A] Fix `local_config.template.js`: stale keys (`initialLevelName` -> `defaultLevelName` plus the `*Prologue` variants) and the dead `apiBaseUrl` (drop it; dev rewrites to the dev host anyway).
 9b. [A] Retire or rewrite `tasks/update_bundled_extensions.js` (it runs `npm install <name>@latest` in `public/`, which would undo the vendoring). Check that `tasks/create_release.js` follows the `public/node_modules` symlinks (unverified).
@@ -70,8 +75,10 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - `c845874` [A] `npm run verify` (`tasks/verify.js`): build, tests, and a CDP launch smoke test with a screenshot and save-file backup and restore.
 - `7eec3ac` [A] validator timeout: `runValidator.js` reports exactly once. A run past 60 s is stopped with "took too long". A validator that returns without reporting fails after a 10 s grace period. Throws and rejections are shown to the player. Late results are ignored, and the Firestore `.catch` is added. Has 10 unit tests. Tradeoff I accepted: the 10 s grace exists because `js_node_env_setup` returns before its spawn reports. A validator that returns early and then reports more than 10 s later would now fail. None was found, but I did not audit them all.
 - `0809b5f` [A] `HackInterface` failing to load an objective now logs, shows the toast "Sorry, this terminal could not be opened." and calls `close()`. Runtime check over CDP: `hackObject` cleared within 2.5 s and the toast was shown.
-- (next commit) [A] jest ignores `.claude/` worktrees, which were polluting the main-checkout test runs.
+- `722ba7a` [A] jest ignores `.claude/` worktrees, which were polluting the main-checkout test runs.
 - **Test baseline is now: 5 suites, 49 tests, all passing.** Orchestrator ran `npm run verify` in the main checkout: build OK, 49/49, smoke OK, and the screenshot shows the title screen.
+
+- `docs/security.md` (cherry-picked from `ec838b4`) [C]: the security model in plain English, the rule about which extensions to trust, an authoring checklist, accepted risks, and a pointer from CLAUDE.md. Verified against code: 11 `dangerouslySetInnerHTML` sites, none sanitized; Pug and EJS templates execute JS.
 
 ## Blocked
 
