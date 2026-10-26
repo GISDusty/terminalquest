@@ -1,4 +1,5 @@
 import config from '../../config/config';
+import { isBackendEnabled } from '../backend';
 import { getContext } from './index';
 import { describeSchema } from './schema';
 
@@ -115,6 +116,10 @@ const debouncedSyncToFirebase = debounceTrailingEdge(
 );
 
 function syncContext(newContextSlice) {
+  if (!isBackendEnabled()) {
+    return;
+  }
+
   const context = getContext();
 
   if (shouldContextSliceTriggerFirebaseSync(newContextSlice)) {
