@@ -4,7 +4,11 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 4 finished)
+- Cycle 5 (2026-10-26):
+  - [A] install hazard: make the nested `public/` install lockfile-authoritative, and prove it from a clean clone;
+  - [B] api-05 endpoint hint and `03-debugging-3` dead link (text-only fixes);
+  - [A] remove dead deps (`vm2`, `@sendgrid/*`, `universal-analytics`, `@electron/remote`, unused Babel plugins).
+  All three are Sonnet agents in worktrees.
 
 ## Backlog (ranked)
 
