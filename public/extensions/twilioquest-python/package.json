@@ -1,0 +1,39 @@
+{
+  "_args": [
+    [
+      "twilioquest-python@1.0.7",
+      "/home/dusty/learning/terminalquest/public"
+    ]
+  ],
+  "_from": "twilioquest-python@1.0.7",
+  "_id": "twilioquest-python@1.0.7",
+  "_inBundle": false,
+  "_integrity": "sha512-X/B3WwS8lTAoJN80+GQ+IAJiedBT49YfN+usEZA/nWnTlKUk4f4xRnfMoDSvxwcpgMQ0uTkLKLj2wsthsoGzQA==",
+  "_location": "/twilioquest-python",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "twilioquest-python@1.0.7",
+    "name": "twilioquest-python",
+    "escapedName": "twilioquest-python",
+    "rawSpec": "1.0.7",
+    "saveSpec": null,
+    "fetchSpec": "1.0.7"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/twilioquest-python/-/twilioquest-python-1.0.7.tgz",
+  "_spec": "1.0.7",
+  "_where": "/home/dusty/learning/terminalquest/public",
+  "dependencies": {
+    "fs-jetpack": "^2.2.0"
+  },
+  "description": "This is an extension for the Pythonic Temple for TwilioQuest.",
+  "engines": {
+    "twilioquest": "3.1.44"
+  },
+  "name": "twilioquest-python",
+  "version": "1.0.7"
+}

@@ -1,0 +1,52 @@
+{
+  "_args": [
+    [
+      "twilioquest-open-source@2.0.1",
+      "/home/dusty/learning/terminalquest/public"
+    ]
+  ],
+  "_from": "twilioquest-open-source@2.0.1",
+  "_id": "twilioquest-open-source@2.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-1y79fpsOjjo7DtUbie1WZWVgwCKGN/Nq7EQrNcrQQBiI8QTFuECnwnuOXFKIA/hxh9KW480Oc3Pskbzwl+Pf1g==",
+  "_location": "/twilioquest-open-source",
+  "_phantomChildren": {
+    "@types/cacheable-request": "6.0.3",
+    "@types/responselike": "1.0.0",
+    "cacheable-lookup": "5.0.4",
+    "clone-response": "1.0.2",
+    "http-cache-semantics": "4.0.2",
+    "http2-wrapper": "1.0.3",
+    "minimatch": "3.0.4",
+    "pump": "3.0.0",
+    "rimraf": "2.6.3"
+  },
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "twilioquest-open-source@2.0.1",
+    "name": "twilioquest-open-source",
+    "escapedName": "twilioquest-open-source",
+    "rawSpec": "2.0.1",
+    "saveSpec": null,
+    "fetchSpec": "2.0.1"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/twilioquest-open-source/-/twilioquest-open-source-2.0.1.tgz",
+  "_spec": "2.0.1",
+  "_where": "/home/dusty/learning/terminalquest/public",
+  "dependencies": {
+    "command-exists": "^1.2.9",
+    "fs-jetpack": "^4.2.0",
+    "got": "^11.8.2",
+    "lodash.merge": "^4.6.2"
+  },
+  "description": "This is the Forest of Open Source extension for TwilioQuest.",
+  "engines": {
+    "twilioquest": "3.1.44"
+  },
+  "name": "twilioquest-open-source",
+  "version": "2.0.1"
+}

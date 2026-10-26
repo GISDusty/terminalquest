@@ -1,0 +1,46 @@
+{
+  "_args": [
+    [
+      "twilioquest-javascript@1.1.7",
+      "/home/dusty/learning/terminalquest/public"
+    ]
+  ],
+  "_from": "twilioquest-javascript@1.1.7",
+  "_id": "twilioquest-javascript@1.1.7",
+  "_inBundle": false,
+  "_integrity": "sha512-qRjc69xR4oDFgowlHvUOy6lB87EGeYPiknpkdtyvRb60w1ZKoSP5Z3NYuzVkzSWRTwX1lHDILCG703fCod0iaw==",
+  "_location": "/twilioquest-javascript",
+  "_phantomChildren": {
+    "minimatch": "3.0.4",
+    "rimraf": "2.6.3"
+  },
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "twilioquest-javascript@1.1.7",
+    "name": "twilioquest-javascript",
+    "escapedName": "twilioquest-javascript",
+    "rawSpec": "1.1.7",
+    "saveSpec": null,
+    "fetchSpec": "1.1.7"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/twilioquest-javascript/-/twilioquest-javascript-1.1.7.tgz",
+  "_spec": "1.1.7",
+  "_where": "/home/dusty/learning/terminalquest/public",
+  "dependencies": {
+    "command-exists": "^1.2.9",
+    "esprima": "^4.0.1",
+    "fs-jetpack": "^4.1.1",
+    "lodash.merge": "^4.6.2",
+    "uuid": "^8.3.2"
+  },
+  "description": "This is the JavaScript Test Lab extension for TwilioQuest.",
+  "engines": {
+    "twilioquest": "3.1.44"
+  },
+  "name": "twilioquest-javascript",
+  "version": "1.1.7"
+}

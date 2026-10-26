@@ -1,0 +1,37 @@
+{
+  "_args": [
+    [
+      "owls-nest-extension@1.0.10",
+      "/home/dusty/learning/terminalquest/public"
+    ]
+  ],
+  "_from": "owls-nest-extension@1.0.10",
+  "_id": "owls-nest-extension@1.0.10",
+  "_inBundle": false,
+  "_integrity": "sha512-J8sOOnX1r0g4HGU+namxPYp6hFCJpClAKtbS7APnFmWBx97IsaTtpa7OdEhapDScDk62BRrswkJUTkDsZ5CXdg==",
+  "_location": "/owls-nest-extension",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "owls-nest-extension@1.0.10",
+    "name": "owls-nest-extension",
+    "escapedName": "owls-nest-extension",
+    "rawSpec": "1.0.10",
+    "saveSpec": null,
+    "fetchSpec": "1.0.10"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/owls-nest-extension/-/owls-nest-extension-1.0.10.tgz",
+  "_spec": "1.0.10",
+  "_where": "/home/dusty/learning/terminalquest/public",
+  "dependencies": {},
+  "description": "This extension contains the prologue level for TwilioQuest.",
+  "engines": {
+    "twilioquest": "3.2.x"
+  },
+  "name": "owls-nest-extension",
+  "version": "1.0.10"
+}

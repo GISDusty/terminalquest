@@ -1,0 +1,66 @@
+{
+  "//files": "This lists the directories we package and ship to NPM.",
+  "_args": [
+    [
+      "twilioquest-base@8.1.0",
+      "/home/dusty/learning/terminalquest/public"
+    ]
+  ],
+  "_from": "twilioquest-base@8.1.0",
+  "_id": "twilioquest-base@8.1.0",
+  "_inBundle": false,
+  "_integrity": "sha512-AUWAh/hvP6yLmEeSrOkbzGSi0SiOB8HBEFvg4Zpmnelps8W2Ej9KPG9saIYG2msp9tUUa1hBGhwpexefkddBfQ==",
+  "_location": "/twilioquest-base",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "twilioquest-base@8.1.0",
+    "name": "twilioquest-base",
+    "escapedName": "twilioquest-base",
+    "rawSpec": "8.1.0",
+    "saveSpec": null,
+    "fetchSpec": "8.1.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/twilioquest-base/-/twilioquest-base-8.1.0.tgz",
+  "_spec": "8.1.0",
+  "_where": "/home/dusty/learning/terminalquest/public",
+  "author": {
+    "name": "Team TwilioQuest"
+  },
+  "bugs": {
+    "url": "https://github.com/TwilioQuest/twilioquest-base/issues"
+  },
+  "dependencies": {
+    "lodash.isequal": "^4.5.0",
+    "lodash.merge": "^4.6.2"
+  },
+  "description": "Base extension for the TwilioQuest game - contains Fog Owl map and common assets",
+  "files": [
+    "/images",
+    "/levels",
+    "/objects",
+    "/scripts",
+    "/spritesheets",
+    "/tilesets",
+    "/items"
+  ],
+  "homepage": "https://github.com/TwilioQuest/twilioquest-base#readme",
+  "keywords": [
+    "twilioquest"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "twilioquest-base",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TwilioQuest/twilioquest-base.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "8.1.0"
+}

@@ -1,0 +1,39 @@
+{
+  "_args": [
+    [
+      "twilioquest-dev-fundamentals@2.4.0",
+      "/home/dusty/learning/terminalquest/public"
+    ]
+  ],
+  "_from": "twilioquest-dev-fundamentals@2.4.0",
+  "_id": "twilioquest-dev-fundamentals@2.4.0",
+  "_inBundle": false,
+  "_integrity": "sha512-IFkLGg2gD1brKJ6cZrdQiabFSNZofLys6UiA9nlTeiNEOzp9Cawgy8jDw9mQllgQ5/A3U+qz/dLyU3ydk+HVFA==",
+  "_location": "/twilioquest-dev-fundamentals",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "twilioquest-dev-fundamentals@2.4.0",
+    "name": "twilioquest-dev-fundamentals",
+    "escapedName": "twilioquest-dev-fundamentals",
+    "rawSpec": "2.4.0",
+    "saveSpec": null,
+    "fetchSpec": "2.4.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/twilioquest-dev-fundamentals/-/twilioquest-dev-fundamentals-2.4.0.tgz",
+  "_spec": "2.4.0",
+  "_where": "/home/dusty/learning/terminalquest/public",
+  "dependencies": {
+    "lodash.merge": "^4.6.2"
+  },
+  "description": "This is TwilioQuest extension for the dev fundamentals mission.",
+  "engines": {
+    "twilioquest": "3.1.44"
+  },
+  "name": "twilioquest-dev-fundamentals",
+  "version": "2.4.0"
+}
