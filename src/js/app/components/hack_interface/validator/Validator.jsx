@@ -13,6 +13,7 @@ import {
 } from '../../context_provider/itemsHelper';
 import Button from '../../Button';
 import ValidationHelper from './ValidationHelper';
+import runValidator from './runValidator';
 import levelLoader from '../../../common/levelLoader';
 import { requireFromExtension } from '../../../common/assetLoader';
 import World from '../../../common/world';
@@ -103,6 +104,8 @@ export default class Validator extends React.Component {
 
   componentWillUnmount() {
     this.keypressListener.stop_listening();
+    // Drop any in-flight validation so a late result can't touch this component
+    if (this.cancelValidation) this.cancelValidation();
   }
 
   validationFieldFocus() {
@@ -133,26 +136,6 @@ export default class Validator extends React.Component {
     // variables - something goofy happening with Context. Keep this in a timer
     // for now.
     setTimeout(async () => {
-      const modulePath = path.join(
-        this.props.objective.objectivePath,
-        'validator.js'
-      );
-      const validate = await requireFromExtension(modulePath);
-
-      // Set up validation context
-      const validationContext = {
-        validationFields: this.state.validationFields,
-
-        // Marshall environment variables for validation
-        env: Object.keys(this.context.env).reduce((acc, key) => {
-          acc[key] = this.context.env[key].value;
-          return acc;
-        }, {}),
-
-        // Pass in global context
-        context: this.context,
-      };
-
       // Set up a validation callback
       const validationCallback = (err, feedback) => {
         if (err) {
@@ -177,15 +160,49 @@ export default class Validator extends React.Component {
         this.processValidationFeedback(err, feedback);
       };
 
-      // Set up validation helper
-      const helper = new ValidationHelper(
-        validationContext,
-        validationCallback,
-        this.props.hackObject.level
-      );
+      try {
+        const modulePath = path.join(
+          this.props.objective.objectivePath,
+          'validator.js'
+        );
+        const validate = await requireFromExtension(modulePath);
+        if (typeof validate !== 'function') {
+          throw new Error(`No validator found at ${modulePath}`);
+        }
 
-      // Attempt configured validation
-      validate(helper, helper.validationCallback);
+        // Set up validation context
+        const validationContext = {
+          validationFields: this.state.validationFields,
+
+          // Marshall environment variables for validation
+          env: Object.keys(this.context.env).reduce((acc, key) => {
+            acc[key] = this.context.env[key].value;
+            return acc;
+          }, {}),
+
+          // Pass in global context
+          context: this.context,
+        };
+
+        // Attempt configured validation. runValidator makes sure the callback
+        // fires exactly once, even if the validator throws, hangs, or returns
+        // without reporting.
+        this.cancelValidation = runValidator(
+          validate,
+          callback =>
+            new ValidationHelper(
+              validationContext,
+              callback,
+              this.props.hackObject.level
+            ),
+          validationCallback
+        );
+      } catch (e) {
+        console.error('Unable to run validator', e);
+        validationCallback({
+          message: `Sorry! The validator could not be run: ${e.message}`,
+        });
+      }
     }, 300);
   }
 
@@ -295,7 +312,7 @@ export default class Validator extends React.Component {
                 this.props.hackObject.level
               );
 
-              Firestore.collection('liveEventAchievements')
+              return Firestore.collection('liveEventAchievements')
                 .doc(
                   `${liveEvent.guid}.${this.props.hackObject.level.levelName}.${this.props.hackObject.objectiveName}`
                 )
@@ -321,6 +338,9 @@ export default class Validator extends React.Component {
             // If the event doesn't exist, disconnect from it.
             setContext({ liveEvent: null });
           }
+        })
+        .catch(e => {
+          console.error('Unable to send live event achievement', e);
         });
     }
 
