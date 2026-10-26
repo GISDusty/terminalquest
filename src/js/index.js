@@ -85,9 +85,11 @@ document.addEventListener(
   false
 );
 
-// Load Spector.js debugger
+// Load Spector.js debugger (a WebGL inspector fetched from a CDN, so only when
+// explicitly enabled with `enableSpector` in local_config.js)
+const spectorEnabled = isDev && config.enableSpector;
 let spector;
-if (isDev) {
+if (spectorEnabled) {
   const script = document.createElement('script');
   script.onload = () => {
     spector = new window.SPECTOR.Spector();
@@ -153,7 +155,7 @@ if (!devToolsItem) {
     })
   );
 
-  if (isDev) {
+  if (spectorEnabled) {
     helpMenuItem.submenu.append(
       new MenuItem({
         label: 'Show Spector.js UI',
