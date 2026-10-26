@@ -57,8 +57,18 @@ export default class HackInterface extends React.Component {
     const { hackObject } = this.context;
     if (hackObject && hackObject !== this.prevHackObject) {
       this.prevHackObject = hackObject;
-      this.loadObjective(hackObject);
+      this.loadObjective(hackObject).catch(e => this.onLoadError(e));
     }
+  }
+
+  // If an objective can't be loaded, don't leave the player stuck with a
+  // hackObject set (which pauses game input). Tell them and close.
+  onLoadError(e) {
+    console.error('Unable to open objective', e);
+    setContext({
+      toastMessage: 'Sorry, this terminal could not be opened.',
+    });
+    this.close();
   }
 
   // Configure component from hackable object
