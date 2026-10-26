@@ -20,15 +20,17 @@ Here the House Gauntlet grants you the privilege of reading House Lovelace's div
 It looks like something has happened inside the secret Lovelace library: books have been torn from their shelves and scattered around the room; and the Divination Incantation has been corrupted! Let's put everything we've learned together and repair the House Lovelace inscription so that the Divination Spell will work once again!<br><br>
 We'll need to first `fetch` the corrupted inscription to see which parts need fixing. After that, we'll have to gather fragments from scrolls scattered throughout the library, combine their text as part of a string in the QuestIDE. Finally, we'll need to send the repaired inscription to the "divination" endpoint via a `patch` request.
 
+The "divination" endpoint URL for this objective is `https://twilio.com/quest/magic/divination?target=lovelace_secret_statue`. Use exactly this URL for both your `GET` request and your `PATCH` request (the `guid` goes in the request body, not in the URL).
+
 Here's an example of sending a `patch` request:
 
 ```js
-const response = await fetch("{{DIVINATION_ENDPOINT}}", {
+const response = await fetch("https://twilio.com/quest/magic/divination?target=lovelace_secret_statue", {
   method: "PATCH",
   body: JSON.stringify({
-    guid: "{{GUID_ARGUMENT}}",
+    guid: guid, // the number/string your function receives
     data: {
-      inscription: "{{REPAIRED_INSCRIPTION}}",
+      inscription: repairedInscription, // your repaired string
     },
   }),
 });
