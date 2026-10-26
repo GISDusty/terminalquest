@@ -4,6 +4,8 @@ Written 2026-10-25 for a later review (e.g. by Opus). The repo is a fork of Twil
 
 Provenance: sections 1 and 2 were done and checked directly in this session. Section 3 comes from three read-only Haiku subagent audits. Those were not independently re-verified, and anything marked (unverified) was unverified by the auditors too. Treat section 3 as leads to confirm, not facts.
 
+> **Update (improvement loop, 2026-10-25):** the live state is now `docs/loop/STATE.md`, and it supersedes this file where they disagree. Key corrections: the content packages are vendored into `public/extensions/` (so the "edits there do not survive" caveat in 3.4 no longer applies; fix lessons in `public/extensions/`). `dev_skills` is never loaded by the game, because `public/` is not an extension root, and it also has engine bugs, so the `terminal_script` fix (24a3962) is not playable. The `npm test` baseline: 3 of 4 suites fail to load.
+
 ## 1. Status: it runs
 
 The game builds and launches on this machine (Arch/Omarchy, Wayland). A screenshot confirmed the title screen ("PRESS SPACEBAR TO START" / "MISSION BRIEFING") renders. I have not played past the title screen, so gameplay, missions and saves are untested.

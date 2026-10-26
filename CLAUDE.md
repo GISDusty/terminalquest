@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-TerminalQuest is an Electron + React + Phaser 2 RPG (a fork of TwilioQuest) that teaches software development. Game content (levels, missions, objectives, tilesets, music) is delivered through "extensions" — npm packages like `twilioquest-base`, which are bundled in `public/node_modules`.
+TerminalQuest is an Electron + React + Phaser 2 RPG (a fork of TwilioQuest) that teaches software development. Game content (levels, missions, objectives, tilesets, music) is delivered through "extensions" — packages like `twilioquest-base`. The seven bundled ones are vendored (committed) under `public/extensions/<name>/` and `public/package.json` links them into `public/node_modules` with `file:` deps. Fix lessons in `public/extensions/`, never in `public/node_modules`. See `public/extensions/README.md`.
 
 ## Commands
 
 `mise.toml` pins Node 18 and Python 3.9, so run commands through `mise exec -- <cmd>` (or let mise activate in this directory). The machine's default Node and Python are newer and too new for this project. `.nvmrc` also says 18. `.npmrc` sets `legacy-peer-deps=true`, because the repo predates npm 7's peer-dependency enforcement: a plain install fails with ERESOLVE (`@electron/remote` wants electron >= 13, the repo pins 11). Whether Python 3.9 is strictly required is untested; the README says 3.11 breaks the build.
 
-Known issues, the verification recipe, and the prioritized backlog are in `HANDOFF.md`. `LOOP_PROMPT.md` is the orchestrator prompt for the ongoing improvement loop. Work happens on the `revival` branch, not `main`.
+Known issues and history are in `HANDOFF.md`. The live backlog, test baseline and verification tooling notes are in `docs/loop/STATE.md`. `LOOP_PROMPT.md` is the orchestrator prompt for the ongoing improvement loop. Work happens on the `revival` branch, not `main`.
 
 - `npm install` — installs root deps; the `postinstall` hook also runs `npm install` inside `public/` (the game bundle has its own `package.json` and its own dependencies, including the bundled extensions).
 - `npm start` — builds JS/CSS/HTML, then launches Electron (`main.js`) with Babel/Sass/Pug watchers running in parallel.
@@ -29,14 +29,14 @@ Source lives in `src/` and is compiled into `public/`:
 - `src/scss/main.scss` → `public/index.css`
 - `src/templates/index.pug` → `public/index.html`
 
-`public/index.*`, `public/app/` and `public/test/` are git-ignored build artifacts. Edit `src/`, never those. By contrast, the rest of `public/` (`levels/`, `lib/`, `fonts/`, `images/`, etc.) is committed, hand-authored content.
+`public/index.*`, `public/app/` and `public/test/` are git-ignored build artifacts. Edit `src/`, never those. By contrast, the rest of `public/` (`extensions/`, `levels/`, `lib/`, `fonts/`, `images/`, etc.) is committed, hand-authored content.
 
 ### Runtime
 `main.js` is a dev-only Electron launcher that loads `public/index.html`. It uses `nodeIntegration` and `@electron/remote`, so renderer code uses Node APIs (`fs`, `path`) and Electron's `remote` directly. The renderer entry is `src/js/index.js`, which mounts `App.jsx`.
 
 - **React UI** is in `src/js/app/components/` (menus, mission computer, hack interface, nav map, onboarding, etc.). The Phaser game itself is in `components/game/` (`Game.jsx`, `DynamicLevel.js`, and `entities/` for player, NPCs, barriers, triggers, etc.).
 - **Global state** is a React context (`components/context_provider/ContextProvider.jsx`) with a yup schema (`common/context/schema.js`). Fields marked `saveToDisk` in the schema are persisted via `electron-store`. Non-component code reads state through `getContext()` from `common/context`. Save data migrations are in `context_provider/migrations.js`.
-- **Config**: `app/config/config.js` holds defaults. In dev it merges the git-ignored `app/config/local_config.js`, created by copying `local_config.template.js` (e.g. to set `initialLevelName`). The list of bundled extensions is `app/config/bundledExtensionModules.json`.
+- **Config**: `app/config/config.js` holds defaults. In dev it merges the git-ignored `app/config/local_config.js`, created by copying `local_config.template.js` (e.g. `defaultLevelName`/`defaultPlayerEntry`, plus the `*Prologue` variants, which win until the prologue is done; the template's `initialLevelName` key is stale and is not read). The list of bundled extensions is `app/config/bundledExtensionModules.json`.
 
 ### Extensions and asset resolution
 This is the part that spans several files. All game assets are looked up *relative to an extension root*, not a fixed path:
@@ -44,7 +44,7 @@ This is the part that spans several files. All game assets are looked up *relati
 - `common/assetLoader.js` (`readFile`, `readDirectory`, `resolveAbsolutePath`, ...) resolves a relative path such as `levels/<name>/level.json` across all extensions, so an extension can add or override files from another extension (including base). On startup it syncs bundled assets into a `.bundled` directory.
 - `common/levelLoader.js` loads levels through this layer, using each level's `level.json` (validated by a yup schema) plus its `events.js`, `maps/`, and `objectives/`. `levelLifecycleManager.js`, `gameEvents.js`, and `world.js` drive per-level events.
 
-Because of this, `public/levels/common/dev_skills` in this repo is the in-repo example of a level, but most game content comes from the `twilioquest-*` packages listed in `public/package.json`. Tests mock these with fixtures in `src/test/fixtures/public/node_modules` and `src/test/fixtures/extensions`.
+Because of this, only levels inside an extension root are loaded. `public/levels/common/dev_skills` is NOT loaded by the game, because `public/` is not an extension root (verified at runtime 2026-10-25). All playable content comes from the vendored packages in `public/extensions/`. `twilioquest-twilio-vr` is still an npm dependency, but it is not in `bundledExtensionModules.json`, so it is not loaded. Tests mock these with fixtures in `src/test/fixtures/public/node_modules` and `src/test/fixtures/extensions`.
 
 ### Levels, objectives, validators
 A level directory contains `level.json` (metadata; `is_mission: true` makes it a mission), `events.js` (a `module.exports = function(event, world)` handler for events like `levelDidLoad`), `conversations/*.pug`, `maps/` (Tiled maps), and `objectives/<objective_name>/` with `description.md`, `walkthrough.md`, and `validator.js`. A validator exports `async helper => {...}` and calls `helper.success(...)` or `helper.fail(...)`, reading user input from `helper.validationFields`. Validators run in the app's Node environment, in the Electron renderer. User-code execution goes through `common/code_runner.js` and `public/code_runner/`.
