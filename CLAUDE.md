@@ -8,7 +8,9 @@ TerminalQuest is an Electron + React + Phaser 2 RPG (a fork of TwilioQuest) that
 
 ## Commands
 
-Requires Node 18 (`.nvmrc`) and Python 3.9 (needed by `node-sass`/native deps; 3.11 is known to break the build).
+`mise.toml` pins Node 18 and Python 3.9, so run commands through `mise exec -- <cmd>` (or let mise activate in this directory). The machine's default Node and Python are newer and too new for this project. `.nvmrc` also says 18. `.npmrc` sets `legacy-peer-deps=true`, because the repo predates npm 7's peer-dependency enforcement: a plain install fails with ERESOLVE (`@electron/remote` wants electron >= 13, the repo pins 11). Whether Python 3.9 is strictly required is untested; the README says 3.11 breaks the build.
+
+Known issues, the verification recipe, and the prioritized backlog are in `HANDOFF.md`. `LOOP_PROMPT.md` is the orchestrator prompt for the ongoing improvement loop. Work happens on the `revival` branch, not `main`.
 
 - `npm install` — installs root deps; the `postinstall` hook also runs `npm install` inside `public/` (the game bundle has its own `package.json` and its own dependencies, including the bundled extensions).
 - `npm start` — builds JS/CSS/HTML, then launches Electron (`main.js`) with Babel/Sass/Pug watchers running in parallel.
