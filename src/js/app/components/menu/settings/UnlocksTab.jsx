@@ -4,6 +4,10 @@ import { Firestore } from '../../../common/firebase.js';
 import { addItems } from '../../context_provider/itemsHelper';
 import { getContext, setContext } from '../../../common/context';
 import ga from '../../../common/analytics';
+import {
+  isBackendEnabled,
+  BACKEND_UNAVAILABLE_MESSAGE,
+} from '../../../common/backend';
 import AsyncInputBox from './AsyncInputBox';
 
 function isCodeUsed(code) {
@@ -35,6 +39,10 @@ function getItem(itemKey) {
 export default class UnlocksTab extends React.Component {
   validateCode(code) {
     return new Promise(resolve => {
+      if (!isBackendEnabled()) {
+        return resolve({ success: false, message: BACKEND_UNAVAILABLE_MESSAGE });
+      }
+
       if (isCodeUsed(code)) {
         return resolve({ success: false, message: 'Code already redeemed!' });
       }

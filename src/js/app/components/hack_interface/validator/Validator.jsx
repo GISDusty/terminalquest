@@ -7,6 +7,7 @@ import ga from '../../../common/analytics';
 import gameEvents from '../../../common/gameEvents';
 import { context, setContext, emitter } from '../../../common/context';
 import { Firestore } from '../../../common/firebase';
+import { isBackendEnabled } from '../../../common/backend';
 import {
   addItems,
   populateLoadoutWithItems,
@@ -284,7 +285,7 @@ export default class Validator extends React.Component {
     });
 
     // Send objective completion to live event, if it exists
-    if (this.context.liveEvent) {
+    if (isBackendEnabled() && this.context.liveEvent) {
       const { liveEvent } = this.context;
 
       Firestore.collection('liveEvents')
