@@ -4,11 +4,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-- Cycle 5 (2026-10-26):
-  - [A] install hazard: make the nested `public/` install lockfile-authoritative, and prove it from a clean clone;
-  - [B] api-05 endpoint hint and `03-debugging-3` dead link (text-only fixes);
-  - [A] remove dead deps (`vm2`, `@sendgrid/*`, `universal-analytics`, `@electron/remote`, unused Babel plugins).
-  All three are Sonnet agents in worktrees.
+(nothing; cycle 5 finished)
 
 ## Backlog (ranked)
 
@@ -37,9 +33,9 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 10. [C] DONE in cycle 3. Original note: security model, only enable extensions you wrote or read (decision 4).
 11. [B] Dead links (nodejs.org arg parsing x5, `github.com/twilio/twilioquest`, others in HANDOFF 3.4); Linux gaps (`js_node_workspace`, `terminal_cd`, `js_unlock_door`); `create_repo` git identity step; Python 3.7 text. Needs vendoring.
 12. [A] DONE in cycle 4 (see Done).
-12a. [A] **Reproducible install hazard (found in cycle 4, high priority):** root `postinstall` runs `install:app` = `cd ./public && npm install`. In a fresh worktree this ignored `public/package-lock.json`, pulled cheerio 1.2.0 (which needs `node:stream`, too new for Electron 11's Node) and rewrote the lockfile. The app then hung on "Loading" until `npm ci` restored cheerio rc.10. Fix: make `install:app` use `npm ci` (or pin cheerio), then confirm a clean clone with `npm install` gives a working game. Also, `npm install --ignore-scripts` at the root flips `dev` to `extraneous` flags on npm's bundled deps in the lockfile; this is harmless churn, so discard it.
+12a. [A] DONE in cycle 5 (see Done). Original note: **Reproducible install hazard (found in cycle 4, high priority):** root `postinstall` runs `install:app` = `cd ./public && npm install`. In a fresh worktree this ignored `public/package-lock.json`, pulled cheerio 1.2.0 (which needs `node:stream`, too new for Electron 11's Node) and rewrote the lockfile. The app then hung on "Loading" until `npm ci` restored cheerio rc.10. Fix: make `install:app` use `npm ci` (or pin cheerio), then confirm a clean clone with `npm install` gives a working game. Also, `npm install --ignore-scripts` at the root flips `dev` to `extraneous` flags on npm's bundled deps in the lockfile; this is harmless churn, so discard it.
 12b. [A] Sass deprecations: 30 `@import`, 2 `lighten`/`darken` (`_Inventory.scss:5`, `_ItemPopover.scss:8`). Migrate to `@use` and `color.adjust` sometime; low priority.
-13. [A] Drop dead deps: `vm2`, `@electron/remote`, `@sendgrid/*`, `universal-analytics`, unused Babel plugins.
+13. [A] DONE in cycle 5 (see Done). Kept: `express`, `body-parser`, `jimp` and `got` (not traced fully; possibly removable), plus `@babel/runtime*` (needed by `corejs: 2`). Follow-up: test whether `legacy-peer-deps` is still needed now that `@electron/remote` is gone. Original note: Drop dead deps: `vm2`, `@electron/remote`, `@sendgrid/*`, `universal-analytics`, unused Babel plugins.
 14. [A] Replace Jest 26 / `@jest-runner/electron` / Enzyme (prereq for React and Electron upgrades).
 15. [A] Electron 11 -> current: preload + IPC instead of `remote` (app files, `public/code_runner/runner.js`, vendored `twilioquest-python/scripts/objectiveValidation.js`).
 16. [A] Node 18 -> current LTS.
@@ -106,6 +102,12 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - `8817712` [A] `node-sass` replaced by `sass`, pinned exactly to 1.99.0, the last release that runs on Node 18 (1.100+ needs Node >= 20.19, because chokidar 5 is ESM). No SCSS changes were needed. Compared with node-sass, the CSS differs only cosmetically (formatting, `black` printed as `rgb(0,0,0)`, sub-1/255 colour rounding). Root lockfile: 161 packages removed, 22 added. The watch script was tested.
 - `1f75ef3` [A] dropped the Python pin from `mise.toml`: nothing needs node-gyp any more. Docs updated (CLAUDE.md, README, HANDOFF 3.1). Caveat: an install without Python was only reasoned through statically, not tested. Note that `LOOP_PROMPT.md` (the user's prompt) still says Python 3.9; I left it for the user.
 - Orchestrator ran `npm run verify` on the merged branch after `npm install --ignore-scripts`: build OK, 52/52, smoke OK, 0 console errors, and the title screen is unchanged.
+
+- `e01a1c4` [B] api-05: the description had unfilled `{{DIVINATION_ENDPOINT}}`, `{{GUID_ARGUMENT}}` and `{{REPAIRED_INSCRIPTION}}` placeholders. It now states the exact URL, `https://twilio.com/quest/magic/divination?target=lovelace_secret_statue`, for GET and PATCH, and says the guid goes in the body (a `guid=` in the URL hits the validator's check path in `fetchOverride`; I checked this).
+- `270b4a8` [B] 03-debugging-3: the dead `ducktypium-diagnostics` hyperlink is now inline code. The validator is unchanged.
+- `7443407` [A] **Install hazard fixed.** Root cause: the root devDependency `"npm": "^6.14.8"` put npm 6 first on PATH inside npm scripts, so the nested `public/` install ran under npm 6, which ignores the v3 lockfile, re-resolved everything and pulled cheerio 1.2.0. The npm devDependency is removed. The new `tasks/install_app.js` runs `npm ci` in `public/` with the invoking npm (`npm_execpath`). Agent's clean-clone proof: `npm install` and `npm ci` both left the lockfile untouched, with cheerio rc.10 and verify passing.
+- `fffdc56`, `80831c3`, `a9451b8` [A] removed dead deps: `vm2`, `@sendgrid/*`, `universal-analytics` (`analytics.js` is now a no-op with the same exports), `@electron/remote`, `i`, `babel-plugin-file-loader`, `babel-plugin-module-resolver` and `react-dev-utils`. That is 50 packages fewer in `public/` and 81 fewer at the root, with no kept package changing version. Require check over `public/extensions` and `public/code_runner`: 68 requires, 0 unresolved.
+- Orchestrator re-synced the main checkout with a plain root `npm install`: lockfiles untouched, npm 6 gone from `.bin`, cheerio rc.10. `npm run verify`: build OK, 52/52, smoke OK, 0 console errors.
 
 ## Blocked
 

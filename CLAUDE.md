@@ -8,7 +8,7 @@ TerminalQuest is an Electron + React + Phaser 2 RPG (a fork of TwilioQuest) that
 
 ## Commands
 
-`mise.toml` pins Node 18, so run commands through `mise exec -- <cmd>` (or let mise activate in this directory). The machine's default Node is newer and too new for this project. `.nvmrc` also says 18. Python is not needed: nothing in root or `public/` compiles native code with node-gyp (`node-sass` was the reason for the old Python 3.9 pin and is gone). `.npmrc` sets `legacy-peer-deps=true`, because the repo predates npm 7's peer-dependency enforcement: a plain install fails with ERESOLVE (`@electron/remote` wants electron >= 13, the repo pins 11).
+`mise.toml` pins Node 18, so run commands through `mise exec -- <cmd>` (or let mise activate in this directory). The machine's default Node is newer and too new for this project. `.nvmrc` also says 18. Python is not needed: nothing in root or `public/` compiles native code with node-gyp (`node-sass` was the reason for the old Python 3.9 pin and is gone). `.npmrc` sets `legacy-peer-deps=true`, because the repo predates npm 7's peer-dependency enforcement. The original ERESOLVE culprit (`@electron/remote`, which wants electron >= 13) has been removed. Whether the flag is still needed is untested.
 
 Sass is compiled with Dart Sass (the `sass` npm package), pinned exactly to 1.99.0. Later releases require Node >= 20.19 and crash on Node 18, so raise the pin only together with the Node version. The CSS build prints known, unmigrated Sass deprecation warnings (`@import`, `lighten`/`darken`).
 
@@ -35,7 +35,7 @@ Source lives in `src/` and is compiled into `public/`:
 `public/index.*`, `public/app/` and `public/test/` are git-ignored build artifacts. Edit `src/`, never those. By contrast, the rest of `public/` (`extensions/`, `levels/`, `lib/`, `fonts/`, `images/`, etc.) is committed, hand-authored content.
 
 ### Runtime
-`main.js` is a dev-only Electron launcher that loads `public/index.html`. It uses `nodeIntegration` and `@electron/remote`, so renderer code uses Node APIs (`fs`, `path`) and Electron's `remote` directly. The renderer entry is `src/js/index.js`, which mounts `App.jsx`.
+`main.js` is a dev-only Electron launcher that loads `public/index.html`. It sets `nodeIntegration` and `enableRemoteModule` (Electron 11's built-in `remote`, not the `@electron/remote` package), so renderer code uses Node APIs (`fs`, `path`) and `remote` directly. The hidden code-runner window (`common/code_runner.js`) sets the same. The renderer entry is `src/js/index.js`, which mounts `App.jsx`.
 
 - **React UI** is in `src/js/app/components/` (menus, mission computer, hack interface, nav map, onboarding, etc.). The Phaser game itself is in `components/game/` (`Game.jsx`, `DynamicLevel.js`, and `entities/` for player, NPCs, barriers, triggers, etc.).
 - **Global state** is a React context (`components/context_provider/ContextProvider.jsx`) with a yup schema (`common/context/schema.js`). Fields marked `saveToDisk` in the schema are persisted via `electron-store`. Non-component code reads state through `getContext()` from `common/context`. Save data migrations are in `context_provider/migrations.js`.
