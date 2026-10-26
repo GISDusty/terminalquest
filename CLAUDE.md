@@ -8,7 +8,9 @@ TerminalQuest is an Electron + React + Phaser 2 RPG (a fork of TwilioQuest) that
 
 ## Commands
 
-`mise.toml` pins Node 18 and Python 3.9, so run commands through `mise exec -- <cmd>` (or let mise activate in this directory). The machine's default Node and Python are newer and too new for this project. `.nvmrc` also says 18. `.npmrc` sets `legacy-peer-deps=true`, because the repo predates npm 7's peer-dependency enforcement: a plain install fails with ERESOLVE (`@electron/remote` wants electron >= 13, the repo pins 11). Whether Python 3.9 is strictly required is untested; the README says 3.11 breaks the build.
+`mise.toml` pins Node 18, so run commands through `mise exec -- <cmd>` (or let mise activate in this directory). The machine's default Node is newer and too new for this project. `.nvmrc` also says 18. Python is not needed: nothing in root or `public/` compiles native code with node-gyp (`node-sass` was the reason for the old Python 3.9 pin and is gone). `.npmrc` sets `legacy-peer-deps=true`, because the repo predates npm 7's peer-dependency enforcement: a plain install fails with ERESOLVE (`@electron/remote` wants electron >= 13, the repo pins 11).
+
+Sass is compiled with Dart Sass (the `sass` npm package), pinned exactly to 1.99.0. Later releases require Node >= 20.19 and crash on Node 18, so raise the pin only together with the Node version. The CSS build prints known, unmigrated Sass deprecation warnings (`@import`, `lighten`/`darken`).
 
 Known issues and history are in `HANDOFF.md`. The live backlog, test baseline and verification tooling notes are in `docs/loop/STATE.md`. `LOOP_PROMPT.md` is the orchestrator prompt for the ongoing improvement loop. Work happens on the `revival` branch, not `main`.
 
