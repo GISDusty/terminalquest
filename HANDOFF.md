@@ -30,6 +30,7 @@ Since then: `mise.toml` (Node 18, Python 3.9), `.npmrc` (`legacy-peer-deps=true`
 
 - `24005ff` add CLAUDE.md (on `main`). It was committed with a one-off `-c user.email=...` because the repo has no git user.email configured.
 - Everything after that lives on the `revival` branch, which the user will update with their say-so. `main` is untouched. See `LOOP_PROMPT.md` for how the improvement loop uses the branch.
+- Remotes (2026-10-25): `origin` is the user's fork `GISDusty/terminalquest` (public), and `upstream` is `TerminalQuest/terminalquest`, which has been dormant since February 2024. `revival` is pushed to `origin`. The user's five big-issue decisions are recorded in `LOOP_PROMPT.md`.
 
 ## 3. Findings: what is stale
 
