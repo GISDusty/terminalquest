@@ -4,7 +4,11 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 3 finished)
+- Cycle 4 (2026-10-26):
+  - [A] QuestIDE code runner `remote`: confirm at runtime, then fix;
+  - [B] hide `owl_plant_tree1`, and work out whether the `twilio.com/quest` URLs block lessons;
+  - [A] `node-sass` to `sass`, and possibly drop the Python pin.
+  All three are Sonnet agents in worktrees.
 
 ## Backlog (ranked)
 
