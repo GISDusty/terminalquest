@@ -27,7 +27,7 @@ Skimming the journal entry, you find a few other useful tips for this trial.
 <details>
 <summary>How do I define a function?</summary>
 
-[Functions](https://docs.python.org/3.7/tutorial/controlflow.html#defining-functions) are reusable chunks of code that you can use as a developer to avoid writing the same code over and over. Similar to the variables we've already seen, __functions have names as well__. This allows us to __call__ them by name to use their functionality. `print()`, for example, is a function that is built in to Python that allows us to send output to the console.
+[Functions](https://docs.python.org/3/tutorial/controlflow.html#defining-functions) are reusable chunks of code that you can use as a developer to avoid writing the same code over and over. Similar to the variables we've already seen, __functions have names as well__. This allows us to __call__ them by name to use their functionality. `print()`, for example, is a function that is built in to Python that allows us to send output to the console.
 
 Here's an example of a Python program that contains a function used to print the name of the currently executing script to the console.
 

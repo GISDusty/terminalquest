@@ -24,4 +24,4 @@
   <code><span><%= env.TQ_PYTHON_CODE_PATH.value %>/functions.py</span></code>
 </div>
 
-Define a [function](https://docs.python.org/3.7/tutorial/controlflow.html#defining-functions) called `hail_friend` which prints the message `Hail, friend!` to the console. This will be your first step to learning the basic moving parts of Python functions. Once you have defined your function in `functions.py`, click the *HACK* button to complete the trial.
+Define a [function](https://docs.python.org/3/tutorial/controlflow.html#defining-functions) called `hail_friend` which prints the message `Hail, friend!` to the console. This will be your first step to learning the basic moving parts of Python functions. Once you have defined your function in `functions.py`, click the *HACK* button to complete the trial.

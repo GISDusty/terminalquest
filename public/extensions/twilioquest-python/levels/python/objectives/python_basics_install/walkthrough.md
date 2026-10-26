@@ -27,9 +27,9 @@ Looking through the rest of the journal entry, you find some possibly useful tip
 <details>
 <summary>How do I download and install Python 3?</summary>
 
-On Windows, we __highly__ recommend installing Python 3 through the [Windows Store](https://docs.python.org/3/using/windows.html) - this handles setting up the `python3` command on your system path and other helpful bits.
+On Windows, we __highly__ recommend installing Python 3 through the Microsoft Store (see [the Python guide to installing on Windows](https://docs.python.org/3/using/windows.html)) - this handles setting up the `python3` command on your system path and other helpful bits.
 
-For other systems, there are [downloads on the python.org website](https://www.python.org/downloads/). As of this writing, the most recent version of Python is `3.7.4`. For Mac, there are graphical installers you can download that should walk you through the installation process.
+For other systems, there are [downloads on the python.org website](https://www.python.org/downloads/). Install Python 3 (any recent version works). For Mac, there are graphical installers you can download that should walk you through the installation process.
 </details>
 
 <details>

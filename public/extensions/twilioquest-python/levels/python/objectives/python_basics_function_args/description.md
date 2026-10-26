@@ -24,7 +24,7 @@
   <code><span><%= env.TQ_PYTHON_CODE_PATH.value %>/functions.py</span></code>
 </div>
 
-Build on your earlier work to define a [function](https://docs.python.org/3.7/tutorial/controlflow.html#defining-functions) called `hail_friend`. This time, your function must take a single __argument__, or input, which provides a name of the friend to be greeted. If your function is called like so:
+Build on your earlier work to define a [function](https://docs.python.org/3/tutorial/controlflow.html#defining-functions) called `hail_friend`. This time, your function must take a single __argument__, or input, which provides a name of the friend to be greeted. If your function is called like so:
 
 ```python
 hail_friend('Jonathan Joestar')

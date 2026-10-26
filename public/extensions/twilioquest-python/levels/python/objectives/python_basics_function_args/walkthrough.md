@@ -27,7 +27,7 @@ The journal entry contains a few other tidbits you may find useful.
 <details>
 <summary>How do I make a function accept arguments?</summary>
 
-__Arguments__ are not an entirely new concept for us. We have already been working with __arguments__ that have been passed in to our Python scripts from the command line. [Arguments to functions](https://docs.python.org/3.7/tutorial/controlflow.html#defining-functions) work in a very similar way. Arguments are pieces of data your functions use to power the code inside them.
+__Arguments__ are not an entirely new concept for us. We have already been working with __arguments__ that have been passed in to our Python scripts from the command line. [Arguments to functions](https://docs.python.org/3/tutorial/controlflow.html#defining-functions) work in a very similar way. Arguments are pieces of data your functions use to power the code inside them.
 
 Here is an example of defining a function with two arguments.
 

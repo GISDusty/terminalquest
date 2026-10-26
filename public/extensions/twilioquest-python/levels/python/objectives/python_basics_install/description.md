@@ -1,6 +1,6 @@
 # The Trial of Installation
 
-Aspiring citizens of the ancient City of Python began their journey as all Python developers do - by __installing Python 3__ on their computers. Get it from the [Windows Store (recommended for PC users)](https://docs.python.org/3/using/windows.html) or from [python.org](https://www.python.org/downloads/).
+Aspiring citizens of the ancient City of Python began their journey as all Python developers do - by __installing Python 3__ on their computers. Get it from the [Python's Windows install guide (the Microsoft Store is recommended for PC users)](https://docs.python.org/3/using/windows.html) or from [python.org](https://www.python.org/downloads/).
 
 You must begin your journey in this same way. To prove that you are ready to become a Python programmer, provide the __full path to the `python3` executable__ on your computer after you install it. If you're not sure how to install Python 3 or how to find the path, __read the "Help" section__ of this challenge.
 
