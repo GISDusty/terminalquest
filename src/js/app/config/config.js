@@ -22,6 +22,11 @@ let config = {
   appDataPath,
   codeStoragePath: path.join(appDataPath, 'QuestIDE'),
   codeStorageFileName: 'user_code.js',
+  // The backend is unmaintained; set true in local_config.js to re-enable
+  // cloud sync, unlock codes, teams and live events.
+  backendEnabled: false,
+  // Load the Spector.js WebGL debugger from a CDN (dev builds only)
+  enableSpector: false,
   apiBaseUrl: PRODUCTION_API_BASE_URL,
   bundledExtensionModules,
   userDataPath,

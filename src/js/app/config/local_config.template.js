@@ -14,6 +14,9 @@ const config = {
   // defaultPlayerEntryPrologue: 'player_entry1',
   // defaultMapNamePrologue: 'default',
 
+  // backendEnabled: false, // talk to the (unmaintained) TwilioQuest backend
+  // enableSpector: false, // load Spector.js from a CDN (dev only)
+
   // The original Twilio backend is offline, so there is no need to set this.
   // apiBaseUrl: 'https://twilioquest-dev.firebaseapp.com/quest/',
 };

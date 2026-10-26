@@ -3,6 +3,7 @@ import {
   getContext,
   setContext
 } from './context';
+import { isBackendEnabled, BACKEND_UNAVAILABLE_MESSAGE } from './backend';
 
 
 async function getTeamFromBackend(joinCode) {
@@ -93,6 +94,13 @@ function disconnectTeam(team) {
 
 function joinTeam(id) {
   return new Promise(async resolve => {
+    if (!isBackendEnabled()) {
+      return resolve({
+        success: false,
+        message: BACKEND_UNAVAILABLE_MESSAGE,
+      });
+    }
+
     if (id === '') {
       return resolve({
         success: false,
