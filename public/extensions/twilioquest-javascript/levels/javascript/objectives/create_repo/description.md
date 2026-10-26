@@ -23,3 +23,10 @@ git commit -m "Initial Commit"
 ```
 
 This will initialize a git repository, add all of your example files, and commit them with a message. Click *HACK* after you've done this to validate your work!
+
+If git says `Please tell me who you are` when you commit, set your identity first, then commit again:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
