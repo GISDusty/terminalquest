@@ -25,7 +25,7 @@ At this point, we've requested the books, parsed the JSON, and stored it in a va
     "id": 1,
     "title": "Application Programming Interface Documentation: What Do Software Developers Want?",
     "yearPublished": 2017,
-    "link": "https://sci-hub.ru/https://journals.sagepub.com/doi/abs/10.1177/0047281617721853",
+    "link": "https://doi.org/10.1177/0047281617721853",
     "author": {
       "name": "Michael Meng"
     },
@@ -37,7 +37,7 @@ At this point, we've requested the books, parsed the JSON, and stored it in a va
     "id": 2,
     "title": "Improving API Usability",
     "yearPublished": 2016,
-    "link": "https://sci-hub.ru/https://dl.acm.org/doi/fullHtml/10.1145/2896587",
+    "link": "https://doi.org/10.1145/2896587",
     "author": {
       "name": "Brad A. Myers"
     },
