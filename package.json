@@ -20,11 +20,11 @@
     "launch": "electron .",
     "build:all": "npm-run-all --parallel build:js build:css build:html",
     "build:js": "babel src/js -d public",
-    "build:css": "node-sass src/scss/main.scss public/index.css",
+    "build:css": "sass --no-source-map src/scss/main.scss public/index.css",
     "build:html": "pug src/templates/index.pug -o public -P",
     "watch:all": "npm-run-all --parallel watch:js watch:css watch:html",
     "watch:js": "babel src/js -d public --watch --source-maps",
-    "watch:css": "node-sass src/scss/main.scss public/index.css -w",
+    "watch:css": "sass --no-source-map --watch src/scss/main.scss public/index.css",
     "watch:html": "pug src/templates/index.pug -o public -P -w",
     "test": "jest src/test/*",
     "verify": "node tasks/verify.js"
@@ -53,7 +53,6 @@
     "klaw": "^4.0.1",
     "md5-file": "^4.0.0",
     "modclean": "^3.0.0-beta.1",
-    "node-sass": "^8.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
     "pug": "^2.0.4",
@@ -77,6 +76,7 @@
     "jest": "^26.6.3",
     "ncp": "^2.0.0",
     "npm": "^6.14.8",
+    "sass": "1.99.0",
     "version-sort": "^0.1.1",
     "ws": "^7.4.2"
   }
