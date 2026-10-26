@@ -26,7 +26,8 @@
     "watch:js": "babel src/js -d public --watch --source-maps",
     "watch:css": "node-sass src/scss/main.scss public/index.css -w",
     "watch:html": "pug src/templates/index.pug -o public -P -w",
-    "test": "jest src/test/*"
+    "test": "jest src/test/*",
+    "verify": "node tasks/verify.js"
   },
   "dependencies": {
     "@babel/cli": "^7.8.4",
