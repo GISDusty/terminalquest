@@ -4,17 +4,19 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 1 finished)
+(nothing; cycle 2 finished)
 
 ## Backlog (ranked)
 
 1. [A] `dev_skills`: BLOCKED on a user decision (see below).
-3. [A] Add `npm run verify` (build + tests + launch smoke + screenshot), reusing the CDP/hyprctl helpers. First make the 3 broken suites load (mock `electron-is-dev` in the test setup, or similar).
 4. [B] Hide Twilio-account missions: API Setup, Voice, Messaging (decision 3). Audit finding: all three are in `twilioquest-twilio-vr` (`basic_training`, `programmable_voice`, `twilio_messaging`). That package is NOT in `bundledExtensionModules.json`, so it is probably never loaded, which would mean they are already hidden. Still to do: confirm at runtime that the Mission Computer does not list them, and record in docs how they would be re-enabled. Voice and Messaging have the prereq `basic_training.basic4`. No mission-level `hidden` flag exists; only objectives have `hidden`.
-5. [B] Uncompletable objectives: `twilioquest-javascript/green-keycard` stub, `skills_plant_tree1` dead backend, `open-source/04_git_clone` 404 repo, `07_sync_master` branch name, api-academy/base `/quest/magic` endpoints. Needs vendoring.
-6. [A] `Validator.jsx` timeout so a validator that never calls back cannot hang the UI.
-7. [A] `HackInterface.loadObjective` must clear `hackObject` on error (keyboard freeze).
-8. [A] Dead-backend features fail quietly offline: cloud sync, unlock codes, teams, live events, plant-a-tree.
+5. [B] Uncompletable objectives that remain: api-academy and base `/quest/magic` and `/quest/ducktypium-diagnostics` endpoints (03-debugging-3, api-03..05). `skills_plant_tree1` is moot, because it is in the unloaded dev_skills level.
+   - Cycle 2 audit, `green-keycard`: the objective is **unreferenced**. No map, level.json objective list or events file refers to it, so it is dead code that cannot block the player. Its validator is an empty stub and its walkthrough is a copy of Twilio account setup. Recommendation: leave it, or hide or remove it with approval. Keycard gating is actually done by `objects/keycard-terminal`, and the scientist conversation grants `green`.
+   - Cycle 2 audit, `07_sync_master`: `twilio-labs/open-pixel-art` exists, its default branch is `master` (checked with `git ls-remote`), and it did not look archived. The validator is completable as written.
+   - Lead to play-test (from code, unverified): on the JS `visitor-signin` map, 3 keycard terminals (ids 203, 204, 206) need `blue`. Nothing grants `blue`, and they have no `targetKey`, so they look like intentionally locked props. The green terminals 191 and 205 seem to rely on tileset default properties (`accessLevel: green`); I haven't confirmed the engine merges those. Confirm in a JS mission play-test.
+6. [A] Needs a play-test: drive a real objective through the hack UI to see the validator timeout and fail paths, and confirm game input resumes after a failed objective load.
+8. [A] Dead-backend features fail quietly offline: cloud sync (verify shows `user-sync` 404 on every launch), unlock codes, teams, live events. Also check why the dev build loads `spectorcdn.babylonjs.com/spector.bundle.js` (a cert error on every launch).
+8b. [A] Declare `ws` in root `devDependencies`; `tasks/verify.js` uses it, and it is only a transitive dependency today.
 9. [A] Fix `local_config.template.js`: stale keys (`initialLevelName` -> `defaultLevelName` plus the `*Prologue` variants) and the dead `apiBaseUrl` (drop it; dev rewrites to the dev host anyway).
 9b. [A] Retire or rewrite `tasks/update_bundled_extensions.js` (it runs `npm install <name>@latest` in `public/`, which would undo the vendoring). Check that `tasks/create_release.js` follows the `public/node_modules` symlinks (unverified).
 10. [C] `docs/security.md`: security model, only enable extensions you wrote or read (decision 4).
@@ -39,6 +41,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 - `02c9b30` point `public/package.json` at them with `file:` deps and regenerate the lockfile (v1 to v3). Verified: the symlinks are in place, every non-builtin require resolves, `build:all` passes, `npm test` is no worse than the baseline, and the level scan finds 12 levels (identical before and after). At runtime in the main checkout, the game reached `owls_nest` and Chiara's opening conversation (orchestrator screenshot).
 - Docs: CLAUDE.md and HANDOFF.md updated for vendoring and the dev_skills findings. The ledger was created.
 - `npm test` baseline recorded (above).
+- `6a7e991` [B] open-source `04_git_clone`: the walkthrough cloned the non-existent `open-pixel-project` (404). It now uses the learner's fork URL, `<%= env.TQ_GITHUB_USERNAME.value %>/open-pixel-art.git`, through the same EJS templating as descriptions (`ObjectiveDescription.jsx:54-100`). Also fixed the typo "omn". Validator mock: 4/4 cases as expected.
 
 ## Findings: dev_skills runtime test (cycle 1)
 
@@ -62,6 +65,13 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - **Match the game window by `class == "terminalquest"`, never by title.** VS Code's title contains "terminalquest". In cycle 1 the orchestrator sent one stray space into the user's unsaved VS Code buffer that way; the user was told.
 - Back up `~/.config/terminalquest/config.json` before a run and restore it afterwards.
 - Coredump at 23:17:59: Electron SIGTRAP, pid 578352, during the dev_skills test run, probably from the in-memory patching (unverified, not diagnosed).
+
+- `7949a41` [A] all 4 test suites load. Cause: `@jest-runner/electron` opens its window without `enableRemoteModule`, so `remote` is undefined; `src/test/setup.js` now mocks `remote.app`. Also restored the missing fixture `aaa-exhaustive-config-extension/node_modules/foo` (it had been hidden by `.gitignore`).
+- `c845874` [A] `npm run verify` (`tasks/verify.js`): build, tests, and a CDP launch smoke test with a screenshot and save-file backup and restore.
+- `7eec3ac` [A] validator timeout: `runValidator.js` reports exactly once. A run past 60 s is stopped with "took too long". A validator that returns without reporting fails after a 10 s grace period. Throws and rejections are shown to the player. Late results are ignored, and the Firestore `.catch` is added. Has 10 unit tests. Tradeoff I accepted: the 10 s grace exists because `js_node_env_setup` returns before its spawn reports. A validator that returns early and then reports more than 10 s later would now fail. None was found, but I did not audit them all.
+- `0809b5f` [A] `HackInterface` failing to load an objective now logs, shows the toast "Sorry, this terminal could not be opened." and calls `close()`. Runtime check over CDP: `hackObject` cleared within 2.5 s and the toast was shown.
+- (next commit) [A] jest ignores `.claude/` worktrees, which were polluting the main-checkout test runs.
+- **Test baseline is now: 5 suites, 49 tests, all passing.** Orchestrator ran `npm run verify` in the main checkout: build OK, 49/49, smoke OK, and the screenshot shows the title screen.
 
 ## Blocked
 

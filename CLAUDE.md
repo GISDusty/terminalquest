@@ -15,7 +15,8 @@ Known issues and history are in `HANDOFF.md`. The live backlog, test baseline an
 - `npm install` — installs root deps; the `postinstall` hook also runs `npm install` inside `public/` (the game bundle has its own `package.json` and its own dependencies, including the bundled extensions).
 - `npm start` — builds JS/CSS/HTML, then launches Electron (`main.js`) with Babel/Sass/Pug watchers running in parallel.
 - `npm run build:all` — one-off build (`build:js`, `build:css`, `build:html`).
-- `npm test` — runs `jest src/test/*` under `@jest-runner/electron`, so tests run inside an Electron renderer. Single test: `npx jest src/test/app/common/extensions.test.js`, or add `-t "<test name>"`.
+- `npm test` — runs `jest src/test/*` under `@jest-runner/electron`, so tests run inside an Electron renderer. Single test: `npx jest src/test/app/common/extensions.test.js`, or add `-t "<test name>"`. `src/test/setup.js` mocks `electron.remote.app`, because the test renderer has no `remote` module.
+- `npm run verify` — build, full test run, then a launch smoke test (`tasks/verify.js`). It starts Electron with a CDP port, waits for the app to render, collects console errors, saves `verify-output/smoke.png`, and backs up and restores the save file. Run it before calling anything fixed. Env knobs are documented at the top of the script.
 - `npm run scaffold:mission -- <name>` — creates a new mission under `public/levels/` from `tasks/scaffold/mission_scaffold`.
 - `npm run audit-items`, `generateVoiceOvers`, `sync:missions`, `release` — scripts in `tasks/`. Most need Firebase/AWS credentials (see `.env.template`).
 
