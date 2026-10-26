@@ -1,15 +1,52 @@
-# Great Power === Great Responsibility
+# Scripts: Commands You Can Reuse
 
-The command line interface on your computer is a powerful tool - it allows you to quickly perform tasks that affect everything on your computer. This is generally a great thing, but there are a few things you should keep in mind.
+Typing a command into your terminal runs it once. A **script** is a plain text file that holds one or more commands, so you can run the same steps again and again just by running the file.
 
-## Don't run untrusted commands or code
+## Create the script file
 
-Because the CLI has so much power, there may be tricksters or randos on the Internet who want to fool you into using the command line to harm your computer or give away personal information. For this reason, you should **never execute code** from an untrusted source, or execute commands without understanding what they do. When in doubt, ask a more experienced computer user for help.
+Use any text editor to create a file named:
 
-## There is no "undo"
+- `my_script.sh` on Mac or Linux
+- `my_script.ps1` on Windows (PowerShell)
 
-When you make a mistake in a Google document, you can always use "Edit > Undo" to back out your mistake. When executing commands from the command line, there is no such thing as an "Undo". This can lead to tough situations, like accidentally losing or deleting files you still need and want on your computer.
+Put this single line in it, and save the file:
 
-## A timeless lesson...
+```bash
+echo "Hello, Operator"
+```
 
-When using the CLI, think before you type! Mistakes happen to all of us (even experienced programmers), but respecting the power of the CLI will help prevent you from getting into too much trouble.
+The `echo` command prints text to the terminal. It works the same way in both `bash` and PowerShell.
+
+## Run your script
+
+Open your terminal, move to the folder where you saved the file (the `cd` command from the last challenge), and run it.
+
+On Mac or Linux:
+
+```bash
+bash my_script.sh
+```
+
+On Windows, in PowerShell:
+
+```powershell
+.\my_script.ps1
+```
+
+If PowerShell tells you that running scripts is disabled on this system, that is a safety setting on your computer. You can still complete the challenge - the game only checks that your script file exists and contains an `echo` command.
+
+You should see `Hello, Operator` printed back to you.
+
+## Find the full path
+
+To paste the path into the game, you need the full location of the file. From the folder that holds your script, run `pwd` (you used it earlier) and add the file name to the end. For example:
+
+```
+/home/you/quest/my_script.sh
+```
+
+On Windows, in PowerShell, `Get-Item .\my_script.ps1 | Select-Object -ExpandProperty FullName` prints the full path.
+
+## Why scripts matter
+
+Almost every task you repeat as a developer - building a project, running tests, backing up files - eventually becomes a script. As in the last challenge, remember that a script runs with the same power as the commands you type, so **only run scripts you wrote or understand**.

@@ -5,7 +5,7 @@
     {
       "name": "scriptPath",
       "type": "text",
-      "placeholder": "C:\\Users\\kw\\quest\\my_script.ps1",
+      "placeholder": "e.g. /home/kevin/quest/my_script.sh or C:\\Users\\kevin\\quest\\my_script.ps1",
       "label": "Paste the full path to your new script file in the text field below."
     }
   ],
