@@ -61,6 +61,8 @@ This will print out a path on your computer (a series of folders) where the inst
 
 `/Library/Frameworks/Python.framework/Versions/3.7/bin/python3`
 
+On Linux, the path will usually look like `/usr/bin/python3`.
+
 On a PC, the process is slightly different. In PowerShell, run the following command:
 
 ```bash

@@ -12,7 +12,7 @@ We'll make our first local commit once we get to the center of the maze!
 
 ## Follow git's instructions to install
 
-Git is a command line tool, which means you'll need to be familiar with how to open something like Terminal on MacOS or PowerShell on Windows.
+Git is a command line tool, which means you'll need to be familiar with how to open something like Terminal on MacOS, your terminal app on Linux (often opened with Ctrl+Alt+T), or PowerShell on Windows.
 
 There are other tools, like GitHub Desktop, that wrap command line git in a graphical user interface. This can be helpful and often powerful enough for most use cases!
 

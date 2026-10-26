@@ -55,6 +55,8 @@ Now, you're ready to create and execute some Python code!
 <details>
 <summary>How do I create a folder using Terminal on Mac?</summary>
 
+On Linux, the commands below work the same way. Open your terminal app (often Ctrl+Alt+T) instead of the Mac Terminal app.
+
 Since you'll be executing your Python code from the terminal, you might want to create the folder for your code using the terminal as well. You could just as easily create a folder using the Finder app, but the commands to follow will do the same thing.
 
 Launch the Terminal app (under Applications > Utilities) on your computer. Once there, type in the following command:
@@ -191,6 +193,12 @@ C:\Users\susan\quest\salutation.py
 
 ```bash
 /Users/susan/quest/salutation.py
+```
+
+...or like this on Linux...
+
+```bash
+/home/susan/quest/salutation.py
 ```
 
 Paste this file path into the text field on the right and click *HACK*. We will validate that your code works as expected, and store the __folder__ for later use. You will be instructed to put all your Python code in this folder.

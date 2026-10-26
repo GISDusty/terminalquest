@@ -52,7 +52,7 @@ Once you add this code to the file, make sure you **save the changes you made!**
 <details>
 <summary>Step 3: Execute the code and ensure that it works</summary>
 
-Now, we will use the Node.js runtime you installed to actually execute the code inside `sayPlease.js`. Usually, you will do this using the command prompt application on your computer - Terminal.app on a Mac, or PowerShell on Windows.
+Now, we will use the Node.js runtime you installed to actually execute the code inside `sayPlease.js`. Usually, you will do this using the command prompt application on your computer - Terminal.app on a Mac, your terminal app on Linux (often opened with Ctrl+Alt+T), or PowerShell on Windows.
 
 Open your terminal application and enter the following command to ensure your "current working directory" is the folder where you created `sayPlease.js`.
 
