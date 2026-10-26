@@ -4,11 +4,13 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 6 finished)
+- Cycle 7 (2026-10-26), started early on user input:
+  - [A/B] dev_skills revival phase 1: move the level into an in-repo extension, apply the engine fixes for barrier/chest and the sort, add interaction; runtime check over CDP (Sonnet, worktree).
+  - [B] research the original API Academy `/quest/magic` responses in upstream repos, older npm tarballs and the Wayback Machine (Sonnet, read-only).
 
 ## Backlog (ranked)
 
-1. [A] `dev_skills`: BLOCKED on a user decision (see below).
+1. [A] `dev_skills` revival: IN PROGRESS (user said enable it, 2026-10-26).
 4. [B] DONE, verified at runtime in cycle 3: the Twilio-account missions are hidden. Over CDP, the 12 loaded levels do not include `basic_training`, `programmable_voice` or `twilio_messaging`, and the Mission Computer and nav map don't list them. To re-enable them, add `twilioquest-twilio-vr` to `bundledExtensionModules.json`; write that down in the authoring docs. Original note: API Setup, Voice, Messaging (decision 3). Audit finding: all three are in `twilioquest-twilio-vr` (`basic_training`, `programmable_voice`, `twilio_messaging`). That package is NOT in `bundledExtensionModules.json`, so it is probably never loaded, which would mean they are already hidden. Still to do: confirm at runtime that the Mission Computer does not list them, and record in docs how they would be re-enabled. Voice and Messaging have the prereq `basic_training.basic4`. No mission-level `hidden` flag exists; only objectives have `hidden`.
 5. [B] Cycle 4 findings. Every `twilio.com/quest/*` URL now returns 200 with the HTML page `github.com/TerminalQuest`.
    - `owl_plant_tree1`: already unreachable (not in any `objectives` manifest or map), marked `hidden` in the cycle 4 commit.
@@ -130,10 +132,10 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 
 ## Blocked
 
-- `dev_skills` revival: waiting on the user (see decisions).
+(none)
 
 ## Decisions needed from the user
 
-2. **API Academy api-03 and api-04 cannot be completed**, because their `twilio.com/quest/magic` endpoints are gone. The proposal is to add local fakes, in `ValidationHelper.fetchOverride` and `public/code_runner/runner.js`, and have the validators use them. The lesson steps would stay the same, but this means new invented content: (a) a fixed magical phrase for api-03, and (b) a small invented JSON book list for api-04, in the walkthrough's schema. Approve (a) and/or (b)? The alternative is to leave them broken or hide them.
+2. **PARTLY ANSWERED 2026-10-26:** the user wants to look for the original data in the upstream API Academy repos (same authors) rather than inventing it. Research is running. Original question: **API Academy api-03 and api-04 cannot be completed**, because their `twilio.com/quest/magic` endpoints are gone. The proposal is to add local fakes, in `ValidationHelper.fetchOverride` and `public/code_runner/runner.js`, and have the validators use them. The lesson steps would stay the same, but this means new invented content: (a) a fixed magical phrase for api-03, and (b) a small invented JSON book list for api-04, in the walkthrough's schema. Approve (a) and/or (b)? The alternative is to leave them broken or hide them.
 
-1. **`dev_skills`**: it is unreachable today and needs about 5 engine and content fixes plus a new `terminal_script_multi` objective. Options: (a) leave it dormant and play `twilioquest-dev-fundamentals` for terminal basics (recommended for now); (b) revive it as a mission in an in-repo extension, which means engine fixes plus writing or repointing the final chest objective.
+1. **ANSWERED 2026-10-26: enable `dev_skills`**, i.e. option (b), revive it. Still open: what the final chest should do (repoint it to an existing objective, or write `terminal_script_multi`); ask once phase 1 lands. Original question: it is unreachable today and needs about 5 engine and content fixes plus a new `terminal_script_multi` objective. Options: (a) leave it dormant and play `twilioquest-dev-fundamentals` for terminal basics (recommended for now); (b) revive it as a mission in an in-repo extension, which means engine fixes plus writing or repointing the final chest objective.
