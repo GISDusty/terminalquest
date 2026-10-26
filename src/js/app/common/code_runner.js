@@ -28,6 +28,8 @@ class CodeRunner extends EventEmitter {
       show: false,
       webPreferences: {
         nodeIntegration: true,
+        // runner.js log() uses require('electron').remote; this goes away with the Electron upgrade
+        enableRemoteModule: true,
       },
       // Specifying the current window as the parent ensures it is closed
       // and cleaned up when the game window closes
