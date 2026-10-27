@@ -90,8 +90,9 @@ There are two places. Use the first.
    `public/node_modules/`, which is a generated copy.
 
 Do not put new missions in `public/levels/`. That folder is not an extension
-root, so nothing in it is loaded. `npm run scaffold:mission` writes there, so
-its output is not loadable as it stands (see [mission.md](mission.md)).
+root, so nothing in it is loaded. To start a mission, run
+`npm run scaffold:mission -- <name> --extension <your extension folder>`, which
+writes a working level into an extension (see [mission.md](mission.md)).
 
 A good first step: read
 `public/extensions/twilioquest-base/levels/challenge-questions/` as a model for

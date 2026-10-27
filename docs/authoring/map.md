@@ -271,8 +271,8 @@ and now work, but only for this level (nothing else uses them):
   `mapDidLoad`. `dev_skills/events.js` does this for its reward chest.
 
 Prefer the tile-object types (`terminal`, `chest-*`, `laser-*`) for new maps.
-Do not copy maps from `tasks/scaffold/mission_scaffold/` without converting
-these objects: the scaffold's `entities/example_entity/` is the old layout.
+The scaffold (`npm run scaffold:mission`) uses tile objects only: its map is a
+trimmed copy of `room_template.json`, not the legacy layout.
 
 Another pitfall from the same level: the `Collision` tile layer only works if it
 has the layer properties `collision: true` (and normally `hidden: true`). The

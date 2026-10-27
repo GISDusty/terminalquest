@@ -128,8 +128,8 @@ What the list does:
 
 Differs from what you might expect: it is easy to read the loader as "an
 objective must be listed to load". In this fork it must be listed to be
-counted, not to open a terminal. The scaffold
-(`tasks/scaffold/mission_scaffold/level.json`) has no `objectives` key at all.
+counted, not to open a terminal. The scaffold's `level.json` lists its sample
+objective for this reason.
 
 ### Prerequisites
 
@@ -335,9 +335,8 @@ nothing. `updateQuestStatus` has no `ignoreLevelInfo` argument.
 
 ### A small real handler
 
-`tasks/scaffold/mission_scaffold/events.js` is a commented starting point that
-keeps per-mission state under a unique key and has a `DEBUG_MODE` switch that
-resets it when the level loads. The real, longer example is
+`tasks/scaffold/mission_scaffold/events.js` is a short starting point that
+shows a notification on `levelDidLoad` and `objectiveCompleted`. The real, longer example is
 `public/extensions/twilioquest-base/levels/challenge-questions/events.js`, which
 unlocks laser barriers when a set of objectives is complete:
 
@@ -375,24 +374,59 @@ Voice-over files, if any, go in `conversations/vo/`.
 
 ## Creating a mission: the scaffold command
 
-`npm run scaffold:mission -- <name>` copies `tasks/scaffold/mission_scaffold/`
-into `public/levels/<name>/` (`tasks/scaffold/index.js`, which resolves
-`public/levels` under the project root).
+```
+npm run scaffold:mission -- <name> [--extension <dir>]
+```
 
-That folder is not loaded. `levelLoader.importLevels` reads `levels/` only
-through the extension list (`readDirectory(LEVEL_DIR_NAME)` in
-`levelLoader.js`), and `public/` is not an extension root. (The loader also
-stores `staticFilePath('levels')` in a `levelsDir` field, but nothing reads that
-field; I searched `src/js`.) So the scaffold's output is not playable as it
-stands. The scaffold is also out of date in two other ways: its `level.json` has
-no `objectives` list, and it ships an `entities/example_entity/config.json` in
-the old legacy layout.
+- `<name>` is the level folder name: letters, digits, `_` and `-`.
+- `--extension <dir>` (`-e`) is the extension folder to write into. The default
+  is `~/tq-extensions/my-extension`. A relative path is resolved against the
+  directory you ran npm in.
+- The mission goes to `<dir>/levels/<name>/`. If `<dir>` has no `package.json`,
+  the command creates one with just `name` (the folder name, lower-cased) and
+  `version` (`0.0.1`), which is all `isExtensionValid` requires (see
+  [extension.md](extension.md)). An existing `package.json` is never touched.
+- It refuses to run if `<dir>/levels/<name>/` already exists, and changes
+  nothing in that case.
 
-To use it anyway, run it, then move the new folder to
-`<your extension>/levels/<name>/`, add `"objectives": ["example_objective"]` to
-its `level.json`, and delete the `entities` folder. The scaffold's sample
-objective is an unrelated JavaScript array quiz; replace it.
+What it writes (from `tasks/scaffold/mission_scaffold/`):
 
-The simpler path is to copy an existing mission folder, such as
-`public/extensions/twilioquest-base/levels/challenge-questions/`, into your
-extension and edit it.
+```
+<dir>/levels/<name>/
+├── level.json                 mission, music, effect, "objectives": ["sample_objective"]
+├── events.js                  shows a notification on levelDidLoad and objectiveCompleted
+├── NOTICE.md                  CC BY attribution for the map (see below)
+├── maps/default.json          player_entry1, an exit to the Fog Owl, one terminal
+└── objectives/sample_objective/
+    ├── objective.json         one text field, 50 XP
+    ├── description.md
+    ├── walkthrough.md
+    └── validator.js           passes when the field says "hello"
+```
+
+The map is a trimmed copy of
+`public/extensions/twilioquest-base/levels/challenge-questions/maps/room_template.json`
+(artwork is CC BY 4.0, Twilio Inc.; `NOTICE.md` records this and the changes).
+Its tileset sources point at `../../../../.bundled/tilesets/`, so keep your
+extension folder directly inside the folder you choose in Settings. The one
+terminal is a tile object with `hackable: true` and
+`objectiveName: "sample_objective"`.
+
+To play it:
+
+1. Press `O` for Settings, choose Extensions, click Enable Extensions, then
+   Choose Directory and pick the folder that **contains** your extension folder
+   (for the default, `~/tq-extensions`).
+2. Restart the game. The mission is in the Mission Computer on the Fog Owl, or
+   run `warp('<name>', 'player_entry1', 'default')` from the developer console.
+3. Walk to the terminal and press space. The hack interface shows "Say Hello".
+   Enter `hello` and click HACK.
+
+Checked at runtime with an extension made by the command: the mission appeared in
+`getFullMissionList()` with its objective, `warp` loaded the map, and pressing
+space at the terminal opened the hack interface. The validator itself was run
+only with a mock helper (empty, wrong and correct input), not by clicking HACK.
+
+Then rename `sample_objective`, edit its files, and add more terminals. Each new
+objective folder needs an entry in `level.json`'s `objectives` list and a map
+object with a matching `objectiveName` (see [objective.md](objective.md)).
