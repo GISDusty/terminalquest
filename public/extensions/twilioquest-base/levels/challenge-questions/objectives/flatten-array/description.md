@@ -26,4 +26,4 @@ Create a function called `flattenArray` that accepts an array containing any num
 
 <br>
 
-Once you've writen this function, click the _HACK_ button!
+Once you've written this function, click the _HACK_ button!

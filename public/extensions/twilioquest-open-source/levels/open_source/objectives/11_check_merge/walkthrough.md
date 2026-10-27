@@ -2,7 +2,7 @@
 
 ## What is a merge?
 
-A merge is a git term for putting two branches back together again. When you forked the repository ealier and made a new branch, you created an alternate version of history with new code in it. The merge process stitches that history back into the main project so everyone can benefit from your code.
+A merge is a git term for putting two branches back together again. When you forked the repository earlier and made a new branch, you created an alternate version of history with new code in it. The merge process stitches that history back into the main project so everyone can benefit from your code.
 
 ## Collaboration!
 

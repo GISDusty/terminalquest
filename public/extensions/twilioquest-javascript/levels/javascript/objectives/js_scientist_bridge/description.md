@@ -10,7 +10,7 @@
 
 The final bridge separating you from the botanist is also disabled. Similar to the west bridge, this one has failed because the **Tree Life Detector** is under configured.
 
-This time, you'll need to create an enchanced version of the Tree Life Detector script to extend the bridge.
+This time, you'll need to create an enhanced version of the Tree Life Detector script to extend the bridge.
 
 ## An enhanced Tree Life Detector
 

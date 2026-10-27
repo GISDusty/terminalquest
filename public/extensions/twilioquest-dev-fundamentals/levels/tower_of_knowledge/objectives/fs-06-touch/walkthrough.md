@@ -19,7 +19,7 @@ You'll learn more about aliases, and how to create your own, in a future floor o
 
 After you enter the `ni` command to create a file, you will see some output about the file you've created. This will include "Mode", "LastWriteTime" and "Length". "Length" is the file's size in bytes (or kilobytes, megabytes, or gigabytes, for larger files). "LastWriteTime" gives a date and time, a "timestamp", for the last time this file was modified, or "written". This information can be useful when you're navigating your filesystem, for example, in a folder containing many similar files, you may use "LastWriteTime" to find the one you most recently worked with. It's also used by applications and developer tools, for example, `git`, that you can learn more about in the Forest of Open Source mission.
 
-"Mode" is the most complicated, and is a 6 character string that describes the file atrributes as "flags". These are options that can either be on, or off. When off, they are represented by a dash, "-". You will likely see a lot of dashes in your Powershell for the file you created. The 6 options are always in the same order, which is:
+"Mode" is the most complicated, and is a 6 character string that describes the file attributes as "flags". These are options that can either be on, or off. When off, they are represented by a dash, "-". You will likely see a lot of dashes in your Powershell for the file you created. The 6 options are always in the same order, which is:
 
 - d - The file is a **directory**.
 - a - The file can be **archived**.

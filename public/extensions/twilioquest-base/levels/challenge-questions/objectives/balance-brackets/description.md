@@ -28,4 +28,4 @@ Create a function `balanceBrackets` that accepts an array of brackets. This func
 
 <br>
 
-Once you've writen this function, click the _HACK_ button!
+Once you've written this function, click the _HACK_ button!

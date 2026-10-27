@@ -31,4 +31,4 @@ Consider checking out the [Palindrome Wiki](https://en.wikipedia.org/wiki/Palind
 
 <br>
 
-Once you've writen this function, click the _HACK_ button!
+Once you've written this function, click the _HACK_ button!

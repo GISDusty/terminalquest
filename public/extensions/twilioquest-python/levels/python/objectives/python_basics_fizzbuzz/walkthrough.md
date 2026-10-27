@@ -89,7 +89,7 @@ print(f"100 minus 60 is {number_converted - 60}")
 
 If you have a number A and a number B, number A is divisible by number B if after dividing A by B, there is no remainder left over.
 
-If you divide `6` by `3`, the result is `2` with no remainder. `6` IS divisble by `3`.
+If you divide `6` by `3`, the result is `2` with no remainder. `6` IS divisible by `3`.
 
 If you divide `7` by `3`, the result is `2` with a remainder of `1`. `7` IS NOT divisible by `3`.
 
@@ -105,7 +105,7 @@ print(f"The remainder after dividing 7 by 3 is {rem2}.")
 
 In the code above, `rem1` would be `0`, and `rem2` would be `1`.
 
-So, in summary - you can tell if one number is divisble by another number by using the `%` operator. If the result is equal to zero, the first number is divisible by the second.
+So, in summary - you can tell if one number is divisible by another number by using the `%` operator. If the result is equal to zero, the first number is divisible by the second.
 
 </details>
 

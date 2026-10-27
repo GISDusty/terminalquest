@@ -28,7 +28,7 @@ Create a program that declares several [boolean](https://docs.python.org/3/libra
 
 * A variable `python_is_glorious` must be set to `True`
 * A variable `failure_is_option` must be set to `False`
-* A variable `proper_greeting` should be INITALLY set to `False`
+* A variable `proper_greeting` should be INITIALLY set to `False`
 
 The third variable `proper_greeting` should be set to `True` if the first argument to your script is the exact string: `For the glory of Python!`
 

@@ -97,7 +97,7 @@ The sabotaged JavaScript file was deleted with no backup that you can find. You'
 
 In your code folder, create a file named `ducktypium.js`. Inside of it, create a class called `Ducktypium`. The constructor should take a single string argument, a crystal color, and store that data in an instance variable named `color`. The **color can only be `red`, `blue`, or `yellow`**. The constructor should [throw an error](https://javascript.info/try-catch#throwing-our-own-errors) if the argument is any other string.
 
-When the class is created, it should **also define a property** called `calibrationSequence` that is initally set to be an **empty array**.
+When the class is created, it should **also define a property** called `calibrationSequence` that is initially set to be an **empty array**.
 
 The Ducktypium class must implement two instance methods: `refract` and `calibrate`. Each of these functions will be described below.
 

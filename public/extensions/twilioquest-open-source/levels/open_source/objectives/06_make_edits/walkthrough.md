@@ -16,7 +16,7 @@ Now that you have Node.js and `npm` installed, in the main folder of your Open P
 npm install
 ```
 
-This will download all of the code dependencies this project needs to run onto your computer. You should now see status messages as the dependenices install.
+This will download all of the code dependencies this project needs to run onto your computer. You should now see status messages as the dependencies install.
 
 This process can take some time!
 
@@ -104,7 +104,7 @@ Now we need to let `git` know that we're happy with our changes. We do this my c
 
 ## How do I commit?
 
-The first step is to add the files you want to be commited. You only need to add the files you want to change, so for this commit we'll only add our updated `_data/pixels.json` file.
+The first step is to add the files you want to be committed. You only need to add the files you want to change, so for this commit we'll only add our updated `_data/pixels.json` file.
 
 ```
 git add _data/pixels.json
@@ -116,11 +116,11 @@ To verify you've added the correct files, you can run the following command:
 git status
 ```
 
-This command will show you which files are about to be commited in green. The `_data/pixels.json` file should be the only one listed!
+This command will show you which files are about to be committed in green. The `_data/pixels.json` file should be the only one listed!
 
 Now we need to use the `git commit` command to finalize our changes. We also add a `-m` flag to this command so that we can add a message that goes along with out commit.
 
-The `feat(pixels):` part before our message is added so that we the Open Pixel Art project can progamatically analyze commit messages. You can learn more about that by checking out the [Conventional Commits Standard](https://www.conventionalcommits.org/en/v1.0.0-beta.4/).
+The `feat(pixels):` part before our message is added so that we the Open Pixel Art project can programmatically analyze commit messages. You can learn more about that by checking out the [Conventional Commits Standard](https://www.conventionalcommits.org/en/v1.0.0-beta.4/).
 
 ```
 git commit -m "feat(pixels): add my new pixel"
@@ -128,4 +128,4 @@ git commit -m "feat(pixels): add my new pixel"
 
 ## Hack away!
 
-This objective had a lot of steps! But now you have a commited new pixel and are ready to share it with the world. Press `HACK` to confirm your pixel has been changed and commited correctly.
+This objective had a lot of steps! But now you have a committed new pixel and are ready to share it with the world. Press `HACK` to confirm your pixel has been changed and committed correctly.

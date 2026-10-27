@@ -10,7 +10,7 @@ We'll be doing this with the `git push` command. We need to add some arguments a
 
 ## Upstream
 
-The process of sending local changes to a remote repostiory is called pushing upstream in git. "Upstream" is a term that refers to the remote branch of the same name as the one you're working on locally.
+The process of sending local changes to a remote repository is called pushing upstream in git. "Upstream" is a term that refers to the remote branch of the same name as the one you're working on locally.
 
 When you made your branch earlier with the `git branch` command, you only created it locally. We need to use the `--set-upstream` flag when we push in order to create your branch on the remote repository as well.
 
@@ -37,7 +37,7 @@ origin	https://github.com/<%= env.TQ_GITHUB_USERNAME.value %>/open-pixel-art.git
 
 You might recognize these URLs as the same ones you cloned to create your original local copy of the your Open Pixel Art fork. That's because `git` has linked our remote fork for us.
 
-To the left of those URLs you'll see the word `origin`. This is the default name that git assigns to your first linked remote repository when you do an intial git clone.
+To the left of those URLs you'll see the word `origin`. This is the default name that git assigns to your first linked remote repository when you do an initial git clone.
 
 To specify that we want to push upstream to our `origin` remote repository, we need to add it as a parameter after the `--set-upstream` flag.
 
@@ -51,7 +51,7 @@ git push --set-upstream origin
 
 The last thing git needs to know about how we're pushing our local branch to our remote repository is the branch name. We want to call our new remote branch the same thing as our local branch name.
 
-Pass the name of your local branch you've been worknig on as the final paramter to our `git push` command.
+Pass the name of your local branch you've been working on as the final parameter to our `git push` command.
 
 Your final command should look like this:
 

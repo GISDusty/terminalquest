@@ -4,7 +4,7 @@
 
 ## What is JSON?
 
-[JSON](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON) (Javascript Object Notation) is a common format used to represent and exchange data, and is often used when making requests to endpoints that provide information in their response. It's important to note that when using `fetch` and receiving JSON, we must [parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON#static_methods) (i.e. have the computer anylize) the JSON data before using it.
+[JSON](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON) (Javascript Object Notation) is a common format used to represent and exchange data, and is often used when making requests to endpoints that provide information in their response. It's important to note that when using `fetch` and receiving JSON, we must [parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON#static_methods) (i.e. have the computer analyze) the JSON data before using it.
 
 ## Getting and filtering the books
 

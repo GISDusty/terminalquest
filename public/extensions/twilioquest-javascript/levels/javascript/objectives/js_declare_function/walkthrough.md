@@ -20,7 +20,7 @@ const currentSetting = getLaserSetting();
 console.log('The current laser setting is: ' + currentSetting);
 ```
 
-You will need to change the contents of the function declared above to satsify this objective. The open and close curly braces (the `{` and `}` characters) denote the start and the end of the code inside the function. Only code written between the `{` and `}` characters will be executed as part of your function!
+You will need to change the contents of the function declared above to satisfy this objective. The open and close curly braces (the `{` and `}` characters) denote the start and the end of the code inside the function. Only code written between the `{` and `}` characters will be executed as part of your function!
 
 Your function must **return** the correct value for the laser setting, as described in the objective. Use what you have learned about variables to make the necessary change. When your function works as directed in the objective tab, click the *HACK* button to validate your work.
 

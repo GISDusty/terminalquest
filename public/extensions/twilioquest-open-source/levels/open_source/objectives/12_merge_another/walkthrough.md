@@ -14,7 +14,7 @@ Another option if you have no ideas for a project to start on is to check out on
 - [Your First PR](https://yourfirstpr.github.io/)
 - [Awesome For Beginners](https://github.com/mungell/awesome-for-beginners)
 
-Additionally, this is a [great longer guide](https://opensource.guide/how-to-contribute/) that gives in depth instruction on how to look for issues and communicate with open source maintainters effectively. It also talks about how writing code isn't the only way to help!
+Additionally, this is a [great longer guide](https://opensource.guide/how-to-contribute/) that gives in depth instruction on how to look for issues and communicate with open source maintainers effectively. It also talks about how writing code isn't the only way to help!
 
 ## I contributed, check my work!
 

@@ -16,7 +16,7 @@ Your changes will live in your local repository only until you push them back up
 
 While you've been working here, there's a chance that new changes got uploaded to GitHub you don't have locally! When we originally cloned our Open Pixel Art fork to this computer, we linked it as a remote repository.
 
-You can see all of the linked repositories by using the `git remote` command. Adding the `-v` command gives more information about the remote, like the URL of the git repoistory its linked to.
+You can see all of the linked repositories by using the `git remote` command. Adding the `-v` command gives more information about the remote, like the URL of the git repository its linked to.
 
 ```bash
 git remote  -v

@@ -14,7 +14,7 @@
 </div>
 
 <i>
-Welcome, Gauntleter, to the fourth challenge of Lovelace Tower. For this challenge, you must excercise your newly acquired `async` and `await` abilities to uncover the names of authors of a group of special books housed in a remote library in The Cloud. These author names are said to have ties to a powerful incantation, which, when invoked, will earn you the `Divination Spell` that you will need to progress through the remaining houses of the Gauntlet. To identify these names, however, the House Gauntlet grants you only a single clue: each of these authors has written more than a certain number of pages. Once you uncover the specific names, read them aloud to produce the Divination Spell.
+Welcome, Gauntleter, to the fourth challenge of Lovelace Tower. For this challenge, you must exercise your newly acquired `async` and `await` abilities to uncover the names of authors of a group of special books housed in a remote library in The Cloud. These author names are said to have ties to a powerful incantation, which, when invoked, will earn you the `Divination Spell` that you will need to progress through the remaining houses of the Gauntlet. To identify these names, however, the House Gauntlet grants you only a single clue: each of these authors has written more than a certain number of pages. Once you uncover the specific names, read them aloud to produce the Divination Spell.
 </i>
 
 The previous objective asked you to immediately return data from an API (Application Programming Interface). We'll want to do a bit more than that, normally, so this time let's do work with the response we get from the new endpoint. Similar to before, we'll be using `fetch` combined with `await` to request data.

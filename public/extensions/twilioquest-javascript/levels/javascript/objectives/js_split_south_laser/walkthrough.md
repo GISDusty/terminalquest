@@ -41,7 +41,7 @@ node sortOrder.js dogs cats
 
 It should print `1`, since `dogs` comes after `cats` alphabetically.
 
-Your code will need to [compare strings with alphabeitcally, as demonstrated here](https://javascript.info/comparison#string-comparison). Also, you may need to convert the strings to the same case before comparison using [toLowerCase](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase).
+Your code will need to [compare strings with alphabetically, as demonstrated here](https://javascript.info/comparison#string-comparison). Also, you may need to convert the strings to the same case before comparison using [toLowerCase](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase).
 
 This should be very similar to the tasks you needed to complete in the south wing of the lab - go back and reference that code if you need to.
 
