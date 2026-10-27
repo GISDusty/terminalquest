@@ -8,13 +8,10 @@ import { getContext, setContext } from '../../../../common/context';
  * @param {MapObject} object - object with `level` and `objectiveName`
  */
 export default function openHackInterface(object) {
-  if (!object.objectiveName) {
-    console.error(
-      'Object is hackable but did not have an objectiveName listed',
-      object
-    );
-    return;
-  }
+  // An object without an objective (such as a reward chest) is handled by the
+  // level's events.js, through the `playerDidInteract` event the player emits
+  // before calling this.
+  if (!object.objectiveName) return;
 
   // Get objective completion status before updating context
   const objectiveKey = `${object.level.levelName}.${object.objectiveName}`;

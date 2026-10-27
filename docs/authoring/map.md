@@ -264,6 +264,11 @@ and now work, but only for this level (nothing else uses them):
   `objectiveName`. Unlike `TileObject`, they do not need `hackable: true`. When
   the objective passes, `markAsComplete` opens the barrier (body disabled, lasers
   gone, screen turns green) or the chest (frame 1).
+- A `chest` with no `objectiveName` opens nothing by itself. Give it a `key`
+  property and handle `playerDidInteract` (`event.target.key`) in the level's
+  `events.js`: check your condition, call `target.markAsComplete()`, grant the
+  reward and save a flag with `world.setState`. Re-apply the flag on
+  `mapDidLoad`. `dev_skills/events.js` does this for its reward chest.
 
 Prefer the tile-object types (`terminal`, `chest-*`, `laser-*`) for new maps.
 Do not copy maps from `tasks/scaffold/mission_scaffold/` without converting

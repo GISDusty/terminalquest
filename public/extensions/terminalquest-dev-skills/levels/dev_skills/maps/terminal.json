@@ -230,9 +230,9 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"objectiveName",
+                         "name":"key",
                          "type":"string",
-                         "value":"terminal_script_multi"
+                         "value":"reward_chest"
                         }],
                  "rotation":0,
                  "type":"chest",
