@@ -30,11 +30,7 @@ have read in full.
 | [objective.md](objective.md) | `objective.json`, `description.md`, `walkthrough.md`, linking an objective to a map object |
 | [validator.md](validator.md) | The `validator.js` contract, the helper, timeouts, a mock-helper test recipe |
 | [map.md](map.md) | Tiled maps, layers, object types, level changes, making an object hackable |
-
-Planned (not written yet):
-
-- A guide to teaching Rust: a mission whose validators compile and run the
-  learner's code.
+| [rust-mission.md](rust-mission.md) | A worked guide to a mission that compiles and runs the learner's Rust code, with a copyable example extension in [examples/rust-quest/](examples/rust-quest/) |
 
 ## The mental model
 

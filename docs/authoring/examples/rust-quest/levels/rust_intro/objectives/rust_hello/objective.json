@@ -1,0 +1,22 @@
+{
+  "title": "Hello, TerminalQuest!",
+  "description": "Write a Rust program that prints <span class=\"highlight\">Hello, TerminalQuest!</span>, then let the terminal compile and run it.",
+  "show_ide": false,
+  "validation_fields": [
+    {
+      "name": "sourcePath",
+      "type": "text",
+      "placeholder": "/home/you/rust/hello/main.rs",
+      "label": "Paste the full path to your `main.rs` file."
+    },
+    {
+      "name": "rustcPath",
+      "type": "text",
+      "placeholder": "~/.cargo/bin/rustc (only if the terminal cannot find it)",
+      "label": "Optional: the path to `rustc`, if the terminal says it cannot find it."
+    }
+  ],
+  "rewards": {
+    "xp": 100
+  }
+}

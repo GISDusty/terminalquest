@@ -11,7 +11,7 @@ choose it carefully and do not rename it later.
 ```
 levels/my_mission/
 ├── level.json
-├── events.js              optional
+├── events.js              include it, even if empty (see below)
 ├── maps/default.json      the map the game loads first (more maps allowed)
 ├── conversations/*.pug    optional
 └── objectives/<name>/     see objective.md
@@ -198,8 +198,13 @@ is not extension-loaded either.
 
 ## events.js
 
-`levels/<level>/events.js` exports one function. It is optional; with no file
-the game skips it quietly.
+`levels/<level>/events.js` exports one function. Treat it as required. A level
+without the file still loads, but entering it logs "Error loading event hander"
+and a `TypeError` (`isPathFromBundledExtension`) to the console; I saw both
+when I loaded an example level with no `events.js`. From reading
+`levelLifecycleManager.setLevel`, the previous level's handler also stays in
+place after that error (unverified). A do-nothing `module.exports = function
+(event, world) {};` avoids all of it.
 
 ```js
 module.exports = function (event, world) {

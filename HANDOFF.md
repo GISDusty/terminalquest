@@ -100,6 +100,8 @@ Not audited: the full text of lessons for factual correctness beyond the above, 
 
 ### 3.5 Rust mission feasibility (Haiku audit)
 
+> Superseded by [docs/authoring/rust-mission.md](docs/authoring/rust-mission.md), which answers the PATH question and ships an example in `docs/authoring/examples/rust-quest/` (build time with real Rust is still unverified). Kept for history.
+
 Feasible, no architectural blockers. The bundled Python extension is the template. Details to check against the code before building:
 - Validators run in the renderer with Node access, so `child_process` works. There is no compile/run helper, so a Rust validator must supply its own spawn, timeout and `kill()`. Use `execFile`/`spawn` with an args array (as in the Python validators), not the shell-string approach in `ValidationHelper.isExecutableValid`.
 - No streaming: a validator calls back once, so buffer compiler output and report at the end. If a validator never calls back, the UI stays stuck in the "hacking" state.

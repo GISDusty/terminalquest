@@ -83,8 +83,8 @@ document `hidden`. In this fork `show_ide` is still used (`Validator.jsx`,
 The QuestIDE only runs JavaScript: it writes the learner's code to disk and runs
 it in a hidden window (`common/code_runner.js`, `public/code_runner/runner.js`).
 For other languages, such as Rust, leave `show_ide` off and ask the learner to
-work in their own editor and give you a file path. A Rust walk-through is
-planned; see [README.md](README.md).
+work in their own editor and give you a file path. See the
+Rust walk-through in [rust-mission.md](rust-mission.md).
 
 ### Validation fields
 

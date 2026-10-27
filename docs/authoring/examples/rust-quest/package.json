@@ -1,0 +1,5 @@
+{
+  "name": "rust-quest",
+  "version": "0.0.1",
+  "description": "Example extension: a mission whose validator compiles and runs the learner's Rust code."
+}
