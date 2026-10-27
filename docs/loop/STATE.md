@@ -52,7 +52,19 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
    - (3) Jest 26 to 29.7, together with babel-jest and jest-environment-jsdom. Re-run the `runValidator` timing tests.
    - (4) Remove `@jest-runner/electron`; the Electron upgrade is then unblocked.
    - (5) Later, with React 18: RTL 14 or 16, `@testing-library/dom@10`, jest-dom 6.
-15. [A] Electron 11 -> current: preload + IPC instead of `remote` (app files, `public/code_runner/runner.js`, vendored `twilioquest-python/scripts/objectiveValidation.js`).
+15. [A] Electron 11 to current. The cycle 10 audit (spot-checked) gives this plan:
+   - **`remote` sites**: `config.js:6-7` (paths at import); `code_runner.js` (runner window created at import, `getCurrentWindow`); `index.js` (sync `confirm`/`alert` via `dialog.showMessageBoxSync`, the Help menu built at import, devtools, plus `shell.openItem`, which no longer exists, so use `openPath`); `analytics.js:21`; `App.jsx:39`; `Extensions.jsx:25` (`showOpenDialog`); `Settings.jsx` (unused import); `public/code_runner/runner.js:41`; and **two** vendored content scripts, `twilioquest-python/scripts/objectiveValidation.js:3,6` and `twilioquest-javascript/scripts/objectiveValidation.js:4,8` (appData at import). The libraries `electron-is-dev` and `electron-store` also fall back to `electron.remote.app`.
+   - No `ipcMain` exists yet. Channels today: `code_runner:log` and `runWithEnv`.
+   - Both content scripts use `appData/TwilioQuest` while the app uses `appData/TerminalQuest`. This is harmless today, since validators only use it as a scratch folder (they never call `getCode`), but unify it during the migration.
+   - ESM trap: `electron-store` 9+, `electron-is-dev` 3.0.1 and `electron-context-menu` 4+ are ESM-only. Pin 8.x, 3.0.0 and 3.x, or replace them with injected values.
+   - Steps, each smoke-tested:
+     1. On Electron 11, add `ipcMain` handlers (paths and version via `additionalArguments`/`sendSync`; a sync message box via `sendSync`; an open-directory dialog; devtools; `shell.openPath`; Menu built in main).
+     2. Move code-runner window ownership to main, and relay its log.
+     3. Replace import-time paths and the library fallbacks.
+     4. Drop `enableRemoteModule`; a grep must find zero `remote`.
+     5. Bump Electron (target 45, latest), keeping `contextIsolation: false` explicit.
+     6. Bump the ESM-affected packages last.
+   - Original note: Electron 11 -> current: preload + IPC instead of `remote` (app files, `public/code_runner/runner.js`, vendored `twilioquest-python/scripts/objectiveValidation.js`).
 16. [A] Node 18 -> current LTS.
 17. [A] React 16 -> 18+ (after Enzyme is gone).
 18. [A] Babel `corejs: 2` config.
@@ -146,6 +158,8 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - `b96147c` [C] **Rust mission guide**: `docs/authoring/rust-mission.md` (521 lines) plus a copyable example extension, `docs/authoring/examples/rust-quest/`. The validator and a `rustTools.js` helper cover: finding the toolchain (PATH, `~/.cargo/bin`, `CARGO_HOME`, a pasted path); spawning with an args array; a timeout with a process-group kill; HTML escaping; stripping ANSI codes. A harness runs 7 cases plus hung-compiler and locate checks. All passed, under Node 18 and Electron's Node 12.18.3. A control run showed that without the group kill, an orphan is left behind. **Rust is not installed here**, so everything was tested against a stand-in `fake_rustc.sh`; real rustc and cargo behaviour is (unverified). Findings: the renderer's PATH does not include `~/.cargo/bin`, and in a desktop-entry-like launch it is only `/usr/local/bin:/usr/bin:/bin`. Electron 11's Node is **12.18.3**, so validators must be Node 12 compatible. A level with no `events.js` logs 2 console errors; `mission.md` was corrected. The example loaded and rendered in the game under a throwaway `--user-data-dir`.
 - `aaf5bf9`, `c939b98` [A/C] **`npm run scaffold:mission -- <name> [--extension <dir>]`** (default `~/tq-extensions/my-extension`) now writes a current-layout mission into an external extension: level.json with a manifest, events.js, a sample objective and validator, a trimmed room map with `NOTICE.md` CC BY attribution, and package.json if missing. It refuses to overwrite. Checks: the yup schema passes, plus JSON and syntax checks, and the validator mock gave 5/5 as expected. At runtime, after enabling the extension (throwaway setting, save restored), the mission appeared in `getFullMissionList()`, warp loaded it, and its terminal opened the hack UI.
 - Orchestrator ran `npm run verify` after all of these: 93/93, 0 console errors.
+
+- `36df898`..`34c0a3e` [B] text fixes: the 404 link in 4 extension READMEs now points to `TerminalQuest/terminalquest` (200); version samples (git 2.22.0, the Python 3.7 path and banner) are now version-neutral; the Python 30 s timer message said "five seconds" and now says thirty; 32 prose typos fixed (19 words). All 30 files are under `public/extensions`; 150 of 150 EJS renders were OK.
 
 ## Blocked
 
