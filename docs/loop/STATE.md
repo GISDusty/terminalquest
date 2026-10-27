@@ -4,10 +4,10 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-- Cycle 8 (2026-10-26):
-  - [A] test migration steps 1-2: jsdom environment, Enzyme replaced by RTL 12.1.5, `@jest-runner/electron` removed (Sonnet, worktree).
-  - [C] Rust mission guide plus an example extension in `docs/authoring/` (Sonnet, worktree).
-- Cycle 7, continued: the dev_skills final chest becomes a plain reward chest (the user chose this on 2026-10-26), plus the first real end-to-end objective pass (pwd) and the Esc check (Sonnet, worktree).
+- Cycle 8: [C] Rust mission guide plus example extension (Sonnet, worktree), still running. The test migration (steps 1, 2, 4) and the dev_skills chest are done.
+- Cycle 9 (2026-10-26):
+  - [A] Jest 26 to 29.7 (step 3) (Sonnet, worktree);
+  - [A/C] `scaffold:mission` writes a loadable external-extension mission (Sonnet, worktree).
 
 ## Backlog (ranked)
 
