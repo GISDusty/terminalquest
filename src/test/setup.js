@@ -24,8 +24,3 @@ window.eval(
     'utf8'
   )
 );
-
-// Removed again once Button.test.js moves to React Testing Library.
-const { configure } = require('enzyme');
-const Adapter = require('enzyme-adapter-react-16');
-configure({ adapter: new Adapter() });
