@@ -1,0 +1,15 @@
+{
+  "title": "Say Hello",
+  "description": "A sample objective. Type the secret word to hack the terminal.",
+  "validation_fields": [
+    {
+      "name": "answer",
+      "type": "text",
+      "placeholder": "hello",
+      "label": "What word does the terminal want?"
+    }
+  ],
+  "rewards": {
+    "xp": 50
+  }
+}

@@ -1,17 +1,12 @@
 {
-  "title": "Scaffolded Mission",
-  "description": "This mission scaffold should get you up and running quickly!",
+  "title": "__TITLE__",
+  "description": "A new TerminalQuest mission. Edit this text in level.json.",
   "is_mission": true,
-  "priority": 1,
+  "priority": 100,
   "backgroundMusic": "hackertheme_104771b",
   "backgroundEffect": {
-    "key": "starfield",
-    "options": {
-      "baseSpeed": 0.03,
-      "direction": "topToBottom"
-    }
+    "key": "vr",
+    "options": {}
   },
-  "flavorTextOverrides": {
-    "bookshelf": "There's nothing like a good book."
-  }
+  "objectives": ["sample_objective"]
 }
