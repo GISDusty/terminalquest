@@ -9,6 +9,7 @@ import ga from '../../../common/analytics';
 import World from '../../../common/world';
 import config from '../../../config/config';
 import { getContext } from '../../../common/context';
+import { createFetchOverride } from '../../../common/apiAcademyStubs';
 const fetch = window.fetch;
 
 export default class ValidationHelper {
@@ -418,134 +419,18 @@ export default class ValidationHelper {
     return output;
   }
 
-  // Marvel Johnson [12/14/2022] A workaround to a validation bug which lives in
-  // the TwilioQuest-Server's /magic route. When used, it will fake requests that include
-  // the queried divination endpoint and treat all others normally (i.e. by using the regular fetch implementation).
-  // This method has been added to the validation helper so that it's accessible to the API Academy
-  // api-05-get-patch objective validator.
-  async fetchOverride(input, init = { method: 'GET', body: {} }) {
-    if (
-      input &&
-      input.includes(
-        'https://twilio.com/quest/magic/divination?target=lovelace_secret_statue'
-      )
-    ) {
-      if (!this.fakeFetch) {
-        this.fakeFetch = {};
-      }
-
-      const response = {
-        body: {
-          data: {
-            inscription: '',
-            operational: false,
-          },
-        },
-        // Only adding this because the player will have been introduced to it in a previous objective
-        async text() {
-          return this.body;
-        },
-        async json() {
-          return this.body;
-        },
-      };
-
-      const inscriptionIsCorrect = inscription => {
-        const inscriptionLowercased = inscription
-          .replace(/[^A-z ]/g, '')
-          .toLowerCase();
-
-        return (
-          inscriptionLowercased.includes('creators of the cloud') &&
-          inscriptionLowercased.includes('formed through a simple') &&
-          inscriptionLowercased.includes('strung together') &&
-          inscriptionLowercased.includes('requests may return') &&
-          inscriptionLowercased.includes('the towers supply') &&
-          inscriptionLowercased.includes('stay locked until i am able to') &&
-          inscriptionLowercased.includes('magical eye')
-        );
-      };
-
-      if (input.includes('guid=')) {
-        const inscription = this.fakeFetch.inscription
-          ? this.fakeFetch.inscription
-          : '';
-
-        if (inscriptionIsCorrect(inscription)) {
-          response.body.data.operational = true;
-        } else {
-          response.body = {
-            errorMessage:
-              'The inscription is still corrupted! Double check your work and try again.',
-          };
-        }
-      } else {
-        const method = init.method.toLowerCase();
-
-        switch (method) {
-          case 'patch':
-            try {
-              JSON.parse(init.body);
-            } catch (_) {
-              response.body = {
-                errorMessage:
-                  'Your request "body" is not JSON parsable! Double check the objective description on how to send the patch request and try again.',
-              };
-
-              return response;
-            }
-
-            const jsonBody = JSON.parse(init.body);
-
-            if (
-              jsonBody.guid === undefined ||
-              jsonBody.data === undefined ||
-              jsonBody.data.inscription === undefined
-            ) {
-              response.body = {
-                errorMessage: `Your patch is missing the "${
-                  jsonBody.guid === undefined
-                    ? 'guid'
-                    : jsonBody.data === undefined
-                    ? 'data'
-                    : jsonBody.data.inscription === undefined
-                    ? 'data.inscription'
-                    : ''
-                }" property! Double check that your formatting matches what is shown in the objective description and try again.`,
-              };
-            } else if (!inscriptionIsCorrect(jsonBody.data.inscription)) {
-              response.body = {
-                errorMessage:
-                  'The inscription is still corrupted! Double check your work and try again.',
-              };
-            } else {
-              this.fakeFetch.inscription = jsonBody.data.inscription;
-              response.body = {
-                message: 'Your patch was received!',
-              };
-            }
-            break;
-          case 'get':
-            response.body.data.inscription = `Oh, great adGRTgfhuwef, let me apply\n\
-This divination spell, newly *77hjfslkefWSghu3 phrase,\n\
-Anvnteu398gtEWRbkyrU thanks to a most helpful API,\n\n\
-That my LIUH4f92nfsDBHerWAGYito the knowledge I seek\n\
-To open my mind to JHBUfRRE#234ijgyREvd\n\
-Of resources both clear and covert.\n\n\
-For the final door shall 99234jtgeRasER$TGWE49 scry\n\
-The programmable answers that will remove this haze\n\
-From my querent and OOIJBUe11239sdSBs.`;
-            break;
-          default:
-            response.body = {
-              errorMessage: `TwilioQuest did not expect "${method}" as the request method! Make sure you're using "PATCH" and try again.`,
-            };
-        }
-      }
-
-      return response;
-    } else {
-      return fetch(...arguments);
+  // Local stand-ins for the dead twilio.com/quest/magic API (API Academy
+  // api-03, api-04 and api-05). The data and routing live in
+  // common/apiAcademyStubs.js, which public/code_runner/runner.js also loads,
+  // so the validator and the learner's code in the QuestIDE see the same
+  // answers. Requests for any other URL go to the real fetch.
+  // History: api-05's inscription workaround was added by Marvel Johnson
+  // [12/14/2022] for a bug in the TwilioQuest-Server's /magic route.
+  fetchOverride(input, init) {
+    if (!this.apiAcademyFetch) {
+      this.apiAcademyFetch = createFetchOverride((...args) => fetch(...args));
     }
+
+    return this.apiAcademyFetch.apply(undefined, arguments);
   }
 }
