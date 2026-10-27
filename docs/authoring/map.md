@@ -248,28 +248,31 @@ To make the objective required, add a `laser-horizontal` or `laser-vertical`
 with the same `objectiveName` across the path. See
 [objective.md](objective.md) for what happens after a pass.
 
-## Pitfall: the legacy `barrier` and `chest` types
+## The legacy `barrier` and `chest` types
 
-The level `public/levels/common/dev_skills` (not loaded in the shipped game,
-because `public/` is not an extension root) uses the old `type: "barrier"` and
-`type: "chest"`. These fail in this engine, found by running the level with a
-temporary extension root (`docs/loop/STATE.md`, "Findings: dev_skills"):
+The level `public/extensions/terminalquest-dev-skills/levels/dev_skills` uses
+the old `type: "barrier"` and `type: "chest"`. They were broken in this engine
+and now work, but only for this level (nothing else uses them):
 
-1. `barrier` is in `EntityMap` but not in `isTypeLegacyObject`, so the sprite
-   config is looked up by `type` (`"barrier"`), not by the object's `name`
-   (`barrier-red`, `barrier-blue`). No such config key exists, so the sprite has
-   no layer sprites, and `HackableBarrier`'s constructor throws on
-   `...this.layerSprites`. A throw there stops the whole object loop, so the
-   rest of the map's objects are not created.
-2. With that patched, the level's per-frame sort (`customSort` in
-   `DynamicLevel.update`) throws on sprites without a physics body.
-3. `HackableBarrier` and `HackableChest` have no `interactionEffect`, so a hack
-   never opens, even when they exist. Only `TileObject` has one.
+- `barrier` and `chest` are in `isTypeLegacyObject`
+  (`EntityConfigService.js`), so the sprite config is looked up by the object's
+  `name` (`barrier-blue`, `chest`) from `public/levels/common/entities/<name>/`.
+- `customSort` in `DynamicLevel.update` falls back to the sprite bounds for
+  layer sprites, which have no physics body.
+- `HackableBarrier` and `HackableChest` have an `interactionEffect`
+  (`entities/base/openHackInterface.js`) that sets `hackObject` for the object's
+  `objectiveName`. Unlike `TileObject`, they do not need `hackable: true`. When
+  the objective passes, `markAsComplete` opens the barrier (body disabled, lasers
+  gone, screen turns green) or the chest (frame 1).
 
-Use the tile-object types instead: `terminal`, `chest-*`, `laser-*`. Do not copy
-maps from `dev_skills` or from `tasks/scaffold/mission_scaffold/` without
-converting these objects. The scaffold's `entities/example_entity/` is the same
-old layout.
+Prefer the tile-object types (`terminal`, `chest-*`, `laser-*`) for new maps.
+Do not copy maps from `tasks/scaffold/mission_scaffold/` without converting
+these objects: the scaffold's `entities/example_entity/` is the old layout.
+
+Another pitfall from the same level: the `Collision` tile layer only works if it
+has the layer properties `collision: true` (and normally `hidden: true`). The
+dev_skills maps lacked them, so nothing collided and the collision tiles were
+drawn as a red overlay.
 
 ## Workflow summary
 

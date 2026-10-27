@@ -21,6 +21,7 @@ The content is no longer updated from npm. The old task that ran `npm install <n
 | `twilioquest-python` | 1.0.7 | none listed in package.json |
 | `twilioquest-api-academy` | 3.0.2 | none listed in package.json |
 | `twilioquest-dev-fundamentals` | 2.4.0 | none listed in package.json |
+| `terminalquest-dev-skills` | 1.0.0 | not an npm copy: the `dev_skills` mission that shipped inside the app, moved from `public/levels/common/dev_skills` |
 
 Omitted from the copies: any nested `node_modules/` (dependencies are now
 declared by each package's `package.json` and installed by npm) and the

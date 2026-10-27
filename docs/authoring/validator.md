@@ -198,7 +198,7 @@ network call).
 
 3. **Treat learner input as untrusted.** A path they paste may be quoted or start
    with `~`; a name they type may contain spaces or shell characters. Normalise
-   (see `public/levels/common/dev_skills/objectives/terminal_script/validator.js`,
+   (see `public/extensions/terminalquest-dev-skills/levels/dev_skills/objectives/terminal_script/validator.js`,
    `normalizePath`) and never put it into a string that a shell will parse.
 4. **Fail fast with a specific hint.** Check the cheap things first (empty,
    missing, wrong type), give one clear message per failure, and finish with
@@ -317,7 +317,7 @@ mise exec -- node test_validator.js path/to/your/validator.js
 ```
 
 The cases above are for
-`public/levels/common/dev_skills/objectives/terminal_script/validator.js`, the
+`public/extensions/terminalquest-dev-skills/levels/dev_skills/objectives/terminal_script/validator.js`, the
 validator this recipe was modelled on. I ran this exact script against it and
 all 11 cases passed. Change the `cases` list for your own objective. The groups
 to cover every time:
@@ -345,7 +345,7 @@ wrong, and right, and watch the console.
   `public/extensions/twilioquest-python/scripts/objectiveValidation.js` and the
   validators in `public/extensions/twilioquest-python/levels/python/objectives/`.
 - Looks at files on disk:
-  `public/levels/common/dev_skills/objectives/terminal_script/validator.js`
+  `public/extensions/terminalquest-dev-skills/levels/dev_skills/objectives/terminal_script/validator.js`
   (this level is not loaded in the game, but the file is a good model).
 - Saves a value for later objectives (and needs the network):
   `public/extensions/twilioquest-open-source/levels/open_source/objectives/01_create_github/validator.js`
