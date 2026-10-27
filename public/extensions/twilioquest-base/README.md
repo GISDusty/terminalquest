@@ -10,6 +10,6 @@ Base extension for the TwilioQuest game - contains Fog Owl map and common assets
   - push to remote
 - Run `npm publish`
   - If you do not have access to this package contact Ryan Kubik or Kevin Whinnery
-- Once published, update the `twilioquest-base` dependency in [the twilioquest repository](https://github.com/twilio/twilioquest) to use this latest deployed version
+- Once published, update the `twilioquest-base` dependency in [the TerminalQuest repository](https://github.com/TerminalQuest/terminalquest) to use this latest deployed version
 - Ensure no changes need to happen to [the twilioquest template extension](https://github.com/twilioquest/twilioquest-extension-template)
 - Release a new TwilioQuest build with updated base dependency
