@@ -41,7 +41,7 @@ Since then: `mise.toml` (Node 18, Python 3.9), `.npmrc` (`legacy-peer-deps=true`
 Versions are from `npm view` on 2026-10-25.
 - **electron ^11.5.0**: very old (latest is 45). The upgrade is large. Renderer code uses `remote` directly (see 3.3), and `electron-devtools-installer`, `electron-context-menu` and `electron-is-dev` would also need changes.
 - **node-sass ^8**: deprecated in favour of `sass`. The swap is small, since it only affects the `build:css` and `watch:css` scripts. Watch for `@import` and `/` division deprecation warnings (unverified). (done: swapped for sass, see docs/loop/STATE.md)
-- **jest/babel-jest 26** with `jest-environment-jsdom` 26 and `@testing-library/react` 12 (React 16 line): Enzyme and `@jest-runner/electron` are gone, so tests no longer depend on the Electron version. Jest 29 and RTL 14+ are still to do, together with React 18.
+- **jest/babel-jest 29.7** with `jest-environment-jsdom` 29 (jsdom 20) and `@testing-library/react` 12 (React 16 line): Enzyme and `@jest-runner/electron` are gone, so tests no longer depend on the Electron version. RTL 14+ is still to do, together with React 18.
 - **react/react-dom 16.8.6**, styled-components 5, electron-store 6, uuid 3, express 4, jimp 0.16, twilio 3: all stale. None is blocking right now.
 - **aws-sdk v2** and **firebase-admin 8**: used only by `tasks/` (voice-over generation, mission sync, release). They matter only if those tasks are revived. firebase-admin latest needs Node >= 22.
 - **vm2** is declared in `public/package.json` but is not imported anywhere, so it is likely removable.
