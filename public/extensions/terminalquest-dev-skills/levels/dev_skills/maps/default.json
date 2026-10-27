@@ -319,6 +319,17 @@
          "id":18,
          "name":"Collision",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"hidden",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":false,
          "width":22,

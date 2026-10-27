@@ -1,6 +1,8 @@
 {
   "title": "Capture The Flag (New Dev Skill Training)",
   "description": "Hone your foundational skills as a developer in a series of 'capture the flag' exercises. Learn how to use the command line, text editors, and other tools of the trade. No matter what kind of software you build, these skills will serve you well.",
+  "questTitle": "Capture The Flag (New Dev Skill Training)",
+  "questDescription": "Capture the flags: learn the command line.",
   "is_mission": true,
   "mission_icon": "dev_skills/mission_icon.png",
   "priority": 2,
