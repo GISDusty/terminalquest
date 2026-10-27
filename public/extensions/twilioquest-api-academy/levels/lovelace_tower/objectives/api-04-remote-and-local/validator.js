@@ -39,7 +39,7 @@ module.exports = async function (helper) {
     );
 
     const test = assertTestCase(context.getFilteredAuthors, helper);
-    const response = await fetch(DIVINATION_API_ENDPOINT);
+    const response = await helper.fetchOverride(DIVINATION_API_ENDPOINT);
     const books = await response.json();
     console.log(books);
     await test(5, getAuthorNames(5, books));
