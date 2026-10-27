@@ -1,6 +1,5 @@
 module.exports = {
-  runner: '@jest-runner/electron',
-  testEnvironment: '@jest-runner/electron/environment',
+  testEnvironment: 'jsdom',
   transform: {
     "^.+\\.jsx?$": "babel-jest"
   },
