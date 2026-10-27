@@ -64,6 +64,8 @@ class EntityConfigService {
       'interactable',
       'levelChange',
       'triggerArea',
+      'barrier',
+      'chest',
     ];
 
     return legacyTypes.includes(type);

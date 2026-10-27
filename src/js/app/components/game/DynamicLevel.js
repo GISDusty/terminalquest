@@ -299,8 +299,14 @@ export default class DynamicLevel extends EventEmitter {
 
       // If objects are on the same zIndex, we should
       // sort them by body position.
-      const bottomOfABody = a.body.y + a.body.height;
-      const bottomOfBBody = b.body.y + b.body.height;
+      // Layer sprites (e.g. a barrier's computer screen) have no physics body,
+      // so fall back to the sprite's own bounds.
+      const bottomOf = sprite =>
+        sprite.body
+          ? sprite.body.y + sprite.body.height
+          : sprite.y + sprite.height;
+      const bottomOfABody = bottomOf(a);
+      const bottomOfBBody = bottomOf(b);
 
       return bottomOfABody - bottomOfBBody;
     });
