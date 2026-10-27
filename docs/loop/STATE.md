@@ -4,10 +4,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-- Cycle 10 (2026-10-26):
-  - [A] audit to plan the Electron upgrade (Haiku);
-  - [A] Babel `corejs: 2` changed to `corejs: false` plus electron targets (Sonnet, worktree);
-  - [B] leftover text: extension README links, version samples, the Python timeout message, a bounded typo sweep (Sonnet, worktree).
+(nothing; cycle 10 finished. Next: Electron migration step 1, IPC handlers on Electron 11.)
 
 ## Backlog (ranked)
 
@@ -67,7 +64,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
    - Original note: Electron 11 -> current: preload + IPC instead of `remote` (app files, `public/code_runner/runner.js`, vendored `twilioquest-python/scripts/objectiveValidation.js`).
 16. [A] Node 18 -> current LTS.
 17. [A] React 16 -> 18+ (after Enzyme is gone).
-18. [A] Babel `corejs: 2` config.
+18. [A] DONE in cycle 10 (`4bc8730`, `4e43591`).
 19a. DONE in cycle 9 (see Done). Original: `npm run scaffold:mission` writes to `public/levels/<name>/`, which is not loaded. Its `level.json` also has no `objectives` list, and it uses the old `entities/` layout. Point it at an extension (e.g. a user extension dir or a new in-repo `public/extensions/<name>`) and update the template. Registering a new in-repo extension takes 4 steps (unverified).
 19. [C] Authoring docs, including the Rust guide: DONE (cycles 6 and 8). Follow-up: test the guide against real `rustc`/`cargo` once Rust is installed. Original note: Authoring docs from upstream `extension-docs` and `twilioquest-extension-template`; Rust mission guide.
 20. [C] CI running `npm run verify` on the fork.
@@ -160,6 +157,8 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - Orchestrator ran `npm run verify` after all of these: 93/93, 0 console errors.
 
 - `36df898`..`34c0a3e` [B] text fixes: the 404 link in 4 extension READMEs now points to `TerminalQuest/terminalquest` (200); version samples (git 2.22.0, the Python 3.7 path and banner) are now version-neutral; the Python 30 s timer message said "five seconds" and now says thirty; 32 prose typos fixed (19 words). All 30 files are under `public/extensions`; 150 of 150 EJS renders were OK.
+
+- `4bc8730`, `4e43591` [A] Babel: `corejs: false`, preset-env `targets: {electron: '11'}` (bump this when Electron is upgraded), and `node: 'current'` for tests. `@babel/runtime-corejs2` and core-js 2 are removed. `public/app` has 0 `runtime-corejs2` imports (it had 1155). No polyfill-dependent code was found. A runtime check warped to fog_owl with 0 errors. The Mission Computer looks empty in a narrow window, but its DOM lists both missions, and it was the same before the change (orchestrator checked over CDP). Orchestrator ran `npm run verify`: 93/93, 0 console errors.
 
 ## Blocked
 
