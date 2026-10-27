@@ -4,7 +4,10 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycles 8 and 9 finished)
+- Cycle 10 (2026-10-26):
+  - [A] audit to plan the Electron upgrade (Haiku);
+  - [A] Babel `corejs: 2` changed to `corejs: false` plus electron targets (Sonnet, worktree);
+  - [B] leftover text: extension README links, version samples, the Python timeout message, a bounded typo sweep (Sonnet, worktree).
 
 ## Backlog (ranked)
 
