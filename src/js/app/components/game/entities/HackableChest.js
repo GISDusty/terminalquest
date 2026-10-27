@@ -1,5 +1,6 @@
 import SpriteObject from './base/SpriteObject';
 import { getContext } from '../../../common/context';
+import openHackInterface from './base/openHackInterface';
 
 export default class HackableChest extends SpriteObject {
   constructor(level, obj) {
@@ -13,6 +14,10 @@ export default class HackableChest extends SpriteObject {
       `${this.level.levelName}.${this.objectiveName}`
     ];
     if (complete) this.markAsComplete();
+  }
+
+  interactionEffect() {
+    openHackInterface(this);
   }
 
   // Mark the current object as complete and update sprite
