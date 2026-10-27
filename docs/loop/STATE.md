@@ -4,10 +4,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-- Cycle 7 (2026-10-26), started early on user input:
-  - [A/B] DONE (see Done): dev_skills revival phase 1: move the level into an in-repo extension, apply the engine fixes for barrier/chest and the sort, add interaction; runtime check over CDP (Sonnet, worktree).
-  - [B] API Academy local stand-ins for api-03 and api-04, in one shared fake module used by `fetchOverride` and the runner (Sonnet, worktree).
-  - [B] DONE: research the original API Academy `/quest/magic` responses in upstream repos, older npm tarballs and the Wayback Machine (Sonnet, read-only).
+- Cycle 7, continued: the dev_skills final chest becomes a plain reward chest (the user chose this on 2026-10-26), plus the first real end-to-end objective pass (pwd) and the Esc check (Sonnet, worktree).
 
 ## Backlog (ranked)
 
@@ -133,15 +130,17 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 
 - `667381f`..`1e591ad` [A/B] **dev_skills revived (phase 1)**. It was moved with `git mv` into the new bundled extension `public/extensions/terminalquest-dev-skills/` and registered (`public/package.json` `file:` link plus `bundledExtensionModules.json`); this is the first real run of the "new in-repo extension" steps. `level.json` got an `objectives` manifest, an object `backgroundEffect` (the `"vr"` string failed yup), and a short quest text. The dead Earth Day tree hook was dropped from events.js. Engine changes: `barrier`/`chest` are legacy types (`EntityConfigService.js:67-68`); `customSort` falls back to sprite bounds (`DynamicLevel.js:~302`); new `entities/base/openHackInterface.js`, used by `HackableBarrier`/`HackableChest` `interactionEffect()`. Also fixed the map Collision layers, which were missing `collision`/`hidden`, so barriers could be walked around. Runtime over CDP: the level loads with 0 exceptions, the Mission Computer lists "Capture The Flag", there are 4 barriers and 1 chest, and interacting with the pwd barrier opens the hack UI. I viewed the screenshot. The chest shows the toast and clears `hackObject`. Orchestrator ran a root `npm install` (lockfiles untouched, symlink created) and `npm run verify`: 52/52, 0 console errors. Not yet verified: a real objective pass and the state after it.
 
+- `436361e`, `9032f73`, `d093c40` [B] **API Academy api-03 and api-04 are completable offline.** `src/js/app/common/apiAcademyStubs.js` is one shared CommonJS module, used by `ValidationHelper.fetchOverride` and by `public/code_runner/runner.js` (which requires the compiled `public/app/common/apiAcademyStubs`). The api-05 fake moved into it unchanged. The api-03 phrase is Ada Lovelace's 1843 line. The api-04 books are the 4 in-game papers, with DOIs, years and page counts from Crossref (36, 8, 5 and 8 pages). The api-03 and api-04 validators now use `helper.fetchOverride`. Book 4's pug link wrongly reused book 1's DOI; it now has its own (`10.1109/MS.2009.193`). Harness: 17/17 cases. A CDP runner check showed the learner's `fetch` gets the phrase and 4 books. Tests went from 52 to 91. Orchestrator ran `npm run verify`: 91/91, 0 console errors. Weakness: with only 4 books, api-04's threshold 100 gives an empty answer, and 30 and 15 give the same answer. It still passes and fails correctly, but the original data probably had more books (unknown).
+
 ## Blocked
 
 (none)
 
 ## Decisions needed from the user
 
-3. **dev_skills final chest** (`maps/terminal.json` id 68) points at the missing `terminal_script_multi`. Options: (a) make it a plain reward chest that opens once the 4 barriers are done, with no new lesson (recommended); (b) write a new objective `terminal_script_multi` (new lesson content, e.g. a script with several commands); (c) leave it showing "could not be opened".
+3. **ANSWERED 2026-10-26: plain reward chest** (option a); implementation is in progress. Original: **dev_skills final chest** (`maps/terminal.json` id 68) points at the missing `terminal_script_multi`. Options: (a) make it a plain reward chest that opens once the 4 barriers are done, with no new lesson (recommended); (b) write a new objective `terminal_script_multi` (new lesson content, e.g. a script with several commands); (c) leave it showing "could not be opened".
 
-2. **ANSWERED 2026-10-26: (A) local stand-ins.** The api-03 phrase is Ada Lovelace's public-domain 1843 Analytical Engine line. api-04 uses the 4 in-game papers, with page counts from the walkthrough and Crossref. Implementation is in progress. Research notes: **Research done (cycle 7).** The original backend ("TwilioQuest-Server") is not public anywhere I could find: not in the GitHub orgs, not in code search, not in npm versions 1.0.0..3.0.3, not in the Wayback Machine. So the original api-03 phrase and the api-04 JSON are lost. Facts:
+2. **ANSWERED AND DONE (see Done, `436361e`).** (A) local stand-ins. The api-03 phrase is Ada Lovelace's public-domain 1843 Analytical Engine line. api-04 uses the 4 in-game papers, with page counts from the walkthrough and Crossref. Implementation is in progress. Research notes: **Research done (cycle 7).** The original backend ("TwilioQuest-Server") is not public anywhere I could find: not in the GitHub orgs, not in code search, not in npm versions 1.0.0..3.0.3, not in the Wayback Machine. So the original api-03 phrase and the api-04 JSON are lost. Facts:
    - api-03's validator accepts any phrase (case-insensitive match against the fetched text).
    - For api-04, the 4 books in-game (`book-1..4.pug`, MIT) give titles, DOIs and authors. The walkthrough gives pageCount 36 and 8 for two of them; the other two pageCounts could come from public DOI metadata.
    - Upstream itself (api-academy 3.0.3, archived) **disabled** api-03 and api-04 by setting `hackable: false` on map objects 545 and 546 in `lovelace_tower/maps/default.json`. Note that the secret door (object 746) needs api-04 completed; check whether it gates api-05.
