@@ -6,7 +6,8 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 - Cycle 7 (2026-10-26), started early on user input:
   - [A/B] dev_skills revival phase 1: move the level into an in-repo extension, apply the engine fixes for barrier/chest and the sort, add interaction; runtime check over CDP (Sonnet, worktree).
-  - [B] research the original API Academy `/quest/magic` responses in upstream repos, older npm tarballs and the Wayback Machine (Sonnet, read-only).
+  - [B] API Academy local stand-ins for api-03 and api-04, in one shared fake module used by `fetchOverride` and the runner (Sonnet, worktree).
+  - [B] DONE: research the original API Academy `/quest/magic` responses in upstream repos, older npm tarballs and the Wayback Machine (Sonnet, read-only).
 
 ## Backlog (ranked)
 
@@ -136,6 +137,11 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 
 ## Decisions needed from the user
 
-2. **PARTLY ANSWERED 2026-10-26:** the user wants to look for the original data in the upstream API Academy repos (same authors) rather than inventing it. Research is running. Original question: **API Academy api-03 and api-04 cannot be completed**, because their `twilio.com/quest/magic` endpoints are gone. The proposal is to add local fakes, in `ValidationHelper.fetchOverride` and `public/code_runner/runner.js`, and have the validators use them. The lesson steps would stay the same, but this means new invented content: (a) a fixed magical phrase for api-03, and (b) a small invented JSON book list for api-04, in the walkthrough's schema. Approve (a) and/or (b)? The alternative is to leave them broken or hide them.
+2. **ANSWERED 2026-10-26: (A) local stand-ins.** The api-03 phrase is Ada Lovelace's public-domain 1843 Analytical Engine line. api-04 uses the 4 in-game papers, with page counts from the walkthrough and Crossref. Implementation is in progress. Research notes: **Research done (cycle 7).** The original backend ("TwilioQuest-Server") is not public anywhere I could find: not in the GitHub orgs, not in code search, not in npm versions 1.0.0..3.0.3, not in the Wayback Machine. So the original api-03 phrase and the api-04 JSON are lost. Facts:
+   - api-03's validator accepts any phrase (case-insensitive match against the fetched text).
+   - For api-04, the 4 books in-game (`book-1..4.pug`, MIT) give titles, DOIs and authors. The walkthrough gives pageCount 36 and 8 for two of them; the other two pageCounts could come from public DOI metadata.
+   - Upstream itself (api-academy 3.0.3, archived) **disabled** api-03 and api-04 by setting `hackable: false` on map objects 545 and 546 in `lovelace_tower/maps/default.json`. Note that the secret door (object 746) needs api-04 completed; check whether it gates api-05.
+   - Options: (A) local fakes, with an invented phrase for api-03 and the in-game book list for api-04; (B) apply upstream's disable; (C) leave them as they are.
+   Earlier:  the user wants to look for the original data in the upstream API Academy repos (same authors) rather than inventing it. Research is running. Original question: **API Academy api-03 and api-04 cannot be completed**, because their `twilio.com/quest/magic` endpoints are gone. The proposal is to add local fakes, in `ValidationHelper.fetchOverride` and `public/code_runner/runner.js`, and have the validators use them. The lesson steps would stay the same, but this means new invented content: (a) a fixed magical phrase for api-03, and (b) a small invented JSON book list for api-04, in the walkthrough's schema. Approve (a) and/or (b)? The alternative is to leave them broken or hide them.
 
 1. **ANSWERED 2026-10-26: enable `dev_skills`**, i.e. option (b), revive it. Still open: what the final chest should do (repoint it to an existing objective, or write `terminal_script_multi`); ask once phase 1 lands. Original question: it is unreachable today and needs about 5 engine and content fixes plus a new `terminal_script_multi` objective. Options: (a) leave it dormant and play `twilioquest-dev-fundamentals` for terminal basics (recommended for now); (b) revive it as a mission in an in-repo extension, which means engine fixes plus writing or repointing the final chest objective.
