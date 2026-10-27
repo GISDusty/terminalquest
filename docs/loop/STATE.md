@@ -4,10 +4,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-- Cycle 8: [C] Rust mission guide plus example extension (Sonnet, worktree), still running. The test migration (steps 1, 2, 4) and the dev_skills chest are done.
-- Cycle 9 (2026-10-26):
-  - [A] Jest 26 to 29.7 (step 3) (Sonnet, worktree);
-  - [A/C] `scaffold:mission` writes a loadable external-extension mission (Sonnet, worktree).
+(nothing; cycles 8 and 9 finished)
 
 ## Backlog (ranked)
 
@@ -45,7 +42,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 12a. [A] DONE in cycle 5 (see Done). Original note: **Reproducible install hazard (found in cycle 4, high priority):** root `postinstall` runs `install:app` = `cd ./public && npm install`. In a fresh worktree this ignored `public/package-lock.json`, pulled cheerio 1.2.0 (which needs `node:stream`, too new for Electron 11's Node) and rewrote the lockfile. The app then hung on "Loading" until `npm ci` restored cheerio rc.10. Fix: make `install:app` use `npm ci` (or pin cheerio), then confirm a clean clone with `npm install` gives a working game. Also, `npm install --ignore-scripts` at the root flips `dev` to `extraneous` flags on npm's bundled deps in the lockfile; this is harmless churn, so discard it.
 12b. [A] Sass deprecations: 30 `@import`, 2 `lighten`/`darken` (`_Inventory.scss:5`, `_ItemPopover.scss:8`). Migrate to `@use` and `color.adjust` sometime; low priority.
 13. [A] DONE in cycle 5 (see Done). Kept: `express`, `body-parser`, `jimp` and `got` (not traced fully; possibly removable), plus `@babel/runtime*` (needed by `corejs: 2`). Follow-up: test whether `legacy-peer-deps` is still needed now that `@electron/remote` is gone. Original note: Drop dead deps: `vm2`, `@electron/remote`, `@sendgrid/*`, `universal-analytics`, unused Babel plugins.
-14. [A] Steps 1, 2 and 4 DONE in cycle 8 (see Done). NEXT: step 3, Jest 26 to 29.7 together with babel-jest and `jest-environment-jsdom`. Risks: jsdom 16 to 20 with Phaser at load; re-run the `runValidator` timers; output format vs. `verify.js` parsing; the single-React guard tests protect `modulePaths`. Original: Replace Jest 26, `@jest-runner/electron` and Enzyme; this is the prerequisite for the React and Electron upgrades. The cycle 6 audit is done (I spot-checked the setup and Enzyme claims). The plan:
+14. [A] Test migration DONE (steps 1-4; see Done for cycles 8 and 9). Remaining step 5 is tied to React 18: RTL 13+, `@testing-library/dom@10`, jest-dom 6. Earlier note: step 3, Jest 26 to 29.7 together with babel-jest and `jest-environment-jsdom`. Risks: jsdom 16 to 20 with Phaser at load; re-run the `runValidator` timers; output format vs. `verify.js` parsing; the single-React guard tests protect `modulePaths`. Original: Replace Jest 26, `@jest-runner/electron` and Enzyme; this is the prerequisite for the React and Electron upgrades. The cycle 6 audit is done (I spot-checked the setup and Enzyme claims). The plan:
    - Facts: no test needs a real Electron API, because the `setup.js` stub covers `remote.app`. Enzyme is used once, in `Button.test.js` (`shallow`, plus one class assertion). `setup.js` `window.eval`s phaser and firebase from `public/lib`, so every suite needs a window, which means jsdom.
    - (1) Swap the runner to `jest-environment-jsdom@26` and keep the electron stub. Risk: phaser `eval` under jsdom.
    - (2) Replace Enzyme with `@testing-library/react@12.1.5` (the only line that supports React 16 and Node 18; pair with `@testing-library/dom@^8`). Use a plain DOM assertion, or `@testing-library/jest-dom@5.17.0`. Then drop `enzyme`, the adapter, and the adapter lines in `setup.js`. Risk: a duplicate React if RTL resolves from the root, since React lives in `public/node_modules`.
@@ -56,8 +53,8 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 16. [A] Node 18 -> current LTS.
 17. [A] React 16 -> 18+ (after Enzyme is gone).
 18. [A] Babel `corejs: 2` config.
-19a. [A/C] `npm run scaffold:mission` writes to `public/levels/<name>/`, which is not loaded. Its `level.json` also has no `objectives` list, and it uses the old `entities/` layout. Point it at an extension (e.g. a user extension dir or a new in-repo `public/extensions/<name>`) and update the template. Registering a new in-repo extension takes 4 steps (unverified).
-19. [C] Authoring docs: DONE in cycle 6 (except the Rust guide, which is next). Original note: Authoring docs from upstream `extension-docs` and `twilioquest-extension-template`; Rust mission guide.
+19a. DONE in cycle 9 (see Done). Original: `npm run scaffold:mission` writes to `public/levels/<name>/`, which is not loaded. Its `level.json` also has no `objectives` list, and it uses the old `entities/` layout. Point it at an extension (e.g. a user extension dir or a new in-repo `public/extensions/<name>`) and update the template. Registering a new in-repo extension takes 4 steps (unverified).
+19. [C] Authoring docs, including the Rust guide: DONE (cycles 6 and 8). Follow-up: test the guide against real `rustc`/`cargo` once Rust is installed. Original note: Authoring docs from upstream `extension-docs` and `twilioquest-extension-template`; Rust mission guide.
 20. [C] CI running `npm run verify` on the fork.
 
 ## Test baseline (2026-10-25, revival @ 22a60ee)
@@ -141,6 +138,11 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
   - **First real objective pass in the app (over CDP):** pwd barrier, answer `/tmp`, HACK. Result: "Objective Clear! 200 XP", the objective marked complete, the lasers gone, the player walks past, and it stays open after a reload. The locked toast, then open plus XP, then "already took" after a reload were all observed. The other 3 objectives were set via `setContext` and their validators were not run.
 - `69f7608` [A] **Esc now closes the hack interface.** `HackInterface.componentDidUpdate` read `this.state.hackObject`, which is never set, so it stopped the keypress listener right after starting it. It now reads `this.context.hackObject`. Esc is confirmed over CDP.
 - Orchestrator ran `npm run verify` after both: 93/93, 0 console errors.
+
+- `cbcb175` [A] **Jest 26 to 29.7** with babel-jest 29 and `jest-environment-jsdom` 29 (jsdom 20). No config, setup or test changes were needed, and Phaser evals fine under jsdom 20. 93/93 tests in about 4.2 s (from 8.3 s); the runValidator timer tests were stable over 3 runs. Root lockfile: 89 packages added, 312 removed, 171 changed, all in the jest, babel and jsdom trees, including `@babel/core` 7.8.7 to 7.29.7 and the dropped `request` tree. `public/` is unchanged.
+- `b96147c` [C] **Rust mission guide**: `docs/authoring/rust-mission.md` (521 lines) plus a copyable example extension, `docs/authoring/examples/rust-quest/`. The validator and a `rustTools.js` helper cover: finding the toolchain (PATH, `~/.cargo/bin`, `CARGO_HOME`, a pasted path); spawning with an args array; a timeout with a process-group kill; HTML escaping; stripping ANSI codes. A harness runs 7 cases plus hung-compiler and locate checks. All passed, under Node 18 and Electron's Node 12.18.3. A control run showed that without the group kill, an orphan is left behind. **Rust is not installed here**, so everything was tested against a stand-in `fake_rustc.sh`; real rustc and cargo behaviour is (unverified). Findings: the renderer's PATH does not include `~/.cargo/bin`, and in a desktop-entry-like launch it is only `/usr/local/bin:/usr/bin:/bin`. Electron 11's Node is **12.18.3**, so validators must be Node 12 compatible. A level with no `events.js` logs 2 console errors; `mission.md` was corrected. The example loaded and rendered in the game under a throwaway `--user-data-dir`.
+- `aaf5bf9`, `c939b98` [A/C] **`npm run scaffold:mission -- <name> [--extension <dir>]`** (default `~/tq-extensions/my-extension`) now writes a current-layout mission into an external extension: level.json with a manifest, events.js, a sample objective and validator, a trimmed room map with `NOTICE.md` CC BY attribution, and package.json if missing. It refuses to overwrite. Checks: the yup schema passes, plus JSON and syntax checks, and the validator mock gave 5/5 as expected. At runtime, after enabling the extension (throwaway setting, save restored), the mission appeared in `getFullMissionList()`, warp loaded it, and its terminal opened the hack UI.
+- Orchestrator ran `npm run verify` after all of these: 93/93, 0 console errors.
 
 ## Blocked
 
