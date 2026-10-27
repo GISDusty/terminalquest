@@ -37,9 +37,9 @@ When you install Python, a REPL is one of the tools that is also installed for y
 
 <pre style="padding:5px;background-color:#232323;color:#eee;">python3</pre>
 
-When you do, you'll see a prompt that looks something like this:
+When you do, you'll see a prompt that looks something like this (your version and build details will differ):
 
-<pre style="padding:5px;background-color:#232323;color:#eee;">Python 3.7.4 (v3.7.4:e09359112e, Jul  8 2019, 14:54:52) 
+<pre style="padding:5px;background-color:#232323;color:#eee;">Python 3.x.y (default, Jan  1 2025, 12:00:00) 
 [Clang 6.0 (clang-600.0.57)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 >>> 

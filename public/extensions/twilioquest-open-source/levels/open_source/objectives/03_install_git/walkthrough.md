@@ -28,10 +28,10 @@ Follow the [official git installation instructions](https://git-scm.com/book/en/
 git --version
 ```
 
-If git is installed correctly, you should see text that looks like this:
+If git is installed correctly, you should see text that looks like this (your version number will differ):
 
 ```
-git version 2.22.0
+git version 2.x.y
 ```
 
 Next, we need to find the **full path** to where the `git` command was installed on your computer. Running the following command in `<%= isWindows ? "PowerShell" : "Terminal" %>` should give you a file path pointing to your `git` installation.

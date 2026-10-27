@@ -57,9 +57,9 @@ This would print out the current version of Python 3 you have installed. If you 
 which python3
 ```
 
-This will print out a path on your computer (a series of folders) where the installer put the `python3` command. Copy this entire string into the text field on the right and click *HACK*. On a Mac, the path could look something like this:
+This will print out a path on your computer (a series of folders) where the installer put the `python3` command. Copy this entire string into the text field on the right and click *HACK*. On a Mac, the path could look something like this (your version number may differ):
 
-`/Library/Frameworks/Python.framework/Versions/3.7/bin/python3`
+`/Library/Frameworks/Python.framework/Versions/3.x/bin/python3`
 
 On Linux, the path will usually look like `/usr/bin/python3`.
 
