@@ -1,11 +1,23 @@
 {
-  "presets": ["@babel/preset-env", "@babel/react"],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        // Keep in sync with the electron version in package.json (Chromium 87,
+        // Node 12). Bump when upgrading Electron. Chromium runs async/await,
+        // classes, etc. natively, so they are not transformed.
+        "targets": { "electron": "11" }
+      }
+    ],
+    "@babel/react"
+  ],
   "plugins": [
     "@babel/plugin-proposal-class-properties",
     [
       "@babel/plugin-transform-runtime",
       {
-        "corejs": 2,
+        // Helpers and regenerator only; no core-js polyfills.
+        "corejs": false,
         "regenerator": true
       }
     ],
@@ -13,13 +25,16 @@
   ],
   "env": {
     "test": {
-      "presets": ["@babel/preset-env", "@babel/react"],
+      "presets": [
+        ["@babel/preset-env", { "targets": { "node": "current" } }],
+        "@babel/react"
+      ],
       "plugins": [
         "@babel/plugin-proposal-class-properties",
         [
           "@babel/plugin-transform-runtime",
           {
-            "corejs": 2,
+            "corejs": false,
             "regenerator": true
           }
         ]
