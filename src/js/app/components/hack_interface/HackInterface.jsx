@@ -46,15 +46,19 @@ export default class HackInterface extends React.Component {
   }
 
   componentDidUpdate() {
-    // Toggle whether or not the keypress listener should be active
-    if (this.state.ideVisible || !this.state.hackObject) {
+    const { hackObject } = this.context;
+
+    // Toggle whether or not the keypress listener should be active. (The hack
+    // object lives in context, not in this component's state; checking state
+    // here used to switch the Esc listener off right after loadObjective had
+    // switched it on.)
+    if (this.state.ideVisible || !hackObject) {
       this.keypressListener.stop_listening();
     } else {
       this.keypressListener.listen();
     }
 
     // Load a new objective if needed
-    const { hackObject } = this.context;
     if (hackObject && hackObject !== this.prevHackObject) {
       this.prevHackObject = hackObject;
       this.loadObjective(hackObject).catch(e => this.onLoadError(e));
