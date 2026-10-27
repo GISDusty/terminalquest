@@ -5,13 +5,13 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 ## In progress
 
 - Cycle 7 (2026-10-26), started early on user input:
-  - [A/B] dev_skills revival phase 1: move the level into an in-repo extension, apply the engine fixes for barrier/chest and the sort, add interaction; runtime check over CDP (Sonnet, worktree).
+  - [A/B] DONE (see Done): dev_skills revival phase 1: move the level into an in-repo extension, apply the engine fixes for barrier/chest and the sort, add interaction; runtime check over CDP (Sonnet, worktree).
   - [B] API Academy local stand-ins for api-03 and api-04, in one shared fake module used by `fetchOverride` and the runner (Sonnet, worktree).
   - [B] DONE: research the original API Academy `/quest/magic` responses in upstream repos, older npm tarballs and the Wayback Machine (Sonnet, read-only).
 
 ## Backlog (ranked)
 
-1. [A] `dev_skills` revival: IN PROGRESS (user said enable it, 2026-10-26).
+1. [A] `dev_skills` phase 2: play-test a real objective pass (pwd), then confirm the barrier opens and stays open after reload and that XP is awarded. Then the final chest, once the user decides. Also: Esc did not close the HackInterface under CDP key events; check whether that's a real bug.
 4. [B] DONE, verified at runtime in cycle 3: the Twilio-account missions are hidden. Over CDP, the 12 loaded levels do not include `basic_training`, `programmable_voice` or `twilio_messaging`, and the Mission Computer and nav map don't list them. To re-enable them, add `twilioquest-twilio-vr` to `bundledExtensionModules.json`; write that down in the authoring docs. Original note: API Setup, Voice, Messaging (decision 3). Audit finding: all three are in `twilioquest-twilio-vr` (`basic_training`, `programmable_voice`, `twilio_messaging`). That package is NOT in `bundledExtensionModules.json`, so it is probably never loaded, which would mean they are already hidden. Still to do: confirm at runtime that the Mission Computer does not list them, and record in docs how they would be re-enabled. Voice and Messaging have the prereq `basic_training.basic4`. No mission-level `hidden` flag exists; only objectives have `hidden`.
 5. [B] Cycle 4 findings. Every `twilio.com/quest/*` URL now returns 200 with the HTML page `github.com/TerminalQuest`.
    - `owl_plant_tree1`: already unreachable (not in any `objectives` manifest or map), marked `hidden` in the cycle 4 commit.
@@ -131,11 +131,15 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - [A] test-stack migration audit (plan under backlog item 14).
 - Orchestrator ran `npm run verify` after the merges: build OK, 52/52, smoke OK, 0 console errors.
 
+- `667381f`..`1e591ad` [A/B] **dev_skills revived (phase 1)**. It was moved with `git mv` into the new bundled extension `public/extensions/terminalquest-dev-skills/` and registered (`public/package.json` `file:` link plus `bundledExtensionModules.json`); this is the first real run of the "new in-repo extension" steps. `level.json` got an `objectives` manifest, an object `backgroundEffect` (the `"vr"` string failed yup), and a short quest text. The dead Earth Day tree hook was dropped from events.js. Engine changes: `barrier`/`chest` are legacy types (`EntityConfigService.js:67-68`); `customSort` falls back to sprite bounds (`DynamicLevel.js:~302`); new `entities/base/openHackInterface.js`, used by `HackableBarrier`/`HackableChest` `interactionEffect()`. Also fixed the map Collision layers, which were missing `collision`/`hidden`, so barriers could be walked around. Runtime over CDP: the level loads with 0 exceptions, the Mission Computer lists "Capture The Flag", there are 4 barriers and 1 chest, and interacting with the pwd barrier opens the hack UI. I viewed the screenshot. The chest shows the toast and clears `hackObject`. Orchestrator ran a root `npm install` (lockfiles untouched, symlink created) and `npm run verify`: 52/52, 0 console errors. Not yet verified: a real objective pass and the state after it.
+
 ## Blocked
 
 (none)
 
 ## Decisions needed from the user
+
+3. **dev_skills final chest** (`maps/terminal.json` id 68) points at the missing `terminal_script_multi`. Options: (a) make it a plain reward chest that opens once the 4 barriers are done, with no new lesson (recommended); (b) write a new objective `terminal_script_multi` (new lesson content, e.g. a script with several commands); (c) leave it showing "could not be opened".
 
 2. **ANSWERED 2026-10-26: (A) local stand-ins.** The api-03 phrase is Ada Lovelace's public-domain 1843 Analytical Engine line. api-04 uses the 4 in-game papers, with page counts from the walkthrough and Crossref. Implementation is in progress. Research notes: **Research done (cycle 7).** The original backend ("TwilioQuest-Server") is not public anywhere I could find: not in the GitHub orgs, not in code search, not in npm versions 1.0.0..3.0.3, not in the Wayback Machine. So the original api-03 phrase and the api-04 JSON are lost. Facts:
    - api-03's validator accepts any phrase (case-insensitive match against the fetched text).
