@@ -88,7 +88,7 @@ function executeScript(pythonPath, codePath, args = []) {
       if (!finished) {
         reject(
           new NiceError(`
-          Your script didn't return a response in time - we waited for five
+          Your script didn't return a response in time - we waited for thirty
           seconds, but it didn't finish executing in that time.
         `)
         );
