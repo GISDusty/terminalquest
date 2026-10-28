@@ -1,0 +1,37 @@
+name: Verify
+
+on:
+  push:
+    branches: ['revival', 'main']
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install system dependencies for Electron smoke test
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgbm1 libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2
+          sudo apt-get install -y libasound2t64 || sudo apt-get install -y libasound2
+
+      # postinstall automatically runs tasks/install_app.js, which runs `npm ci` in public/
+      - run: npm ci
+
+      - name: Run verify
+        run: xvfb-run -a npm run verify
+
+      - name: Upload verify output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-output
+          path: verify-output/
