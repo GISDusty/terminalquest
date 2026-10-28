@@ -315,9 +315,7 @@ The `finally` block deletes the temp folder, whichever way the function ended
 (`removeDir` uses `fs.rmSync` when it exists and `fs.rmdirSync` on Node 12). The
 harness checks that no `tq-rust-*` folder is left behind.
 
-Node 12 note: the game's renderer runs Node 12.18.3 (Electron 11). Do not use
-`?.`, `??` or `fs.rm` in a validator or its helpers. The example avoids them, and
-the harness was also run under Electron's Node to be sure
+Node 12 note (historical): as of cycle 12 the game's renderer runs Node 24.22.1 (Electron 45), so `?.`, `??` and `fs.rm` are all fine now. Keeping the helper compatible with older Node is harmless, however; the example avoids them, and the harness was also run under Electron's Node to be sure
 (`ELECTRON_RUN_AS_NODE=1 <repo>/node_modules/electron/dist/electron tools/test_validator.js --fake`).
 
 Two environment variables, `TQ_RUST_COMPILE_TIMEOUT_MS` and
