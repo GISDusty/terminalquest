@@ -4,7 +4,10 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 10 finished. Next: Electron migration step 1, IPC handlers on Electron 11.)
+Cycle 11:
+- [A] Commit `main.js` `no-sandbox` fix (seccomp GPU crash on modern kernels) and Electron migration steps 1–4 (replace `remote` with IPC on Electron 11, drop `enableRemoteModule`).
+- [B] `terminalquest-dev-skills` audit & fixes: `terminal_cd` Linux gap, link check of `dev_skills` objectives (moved to `public/extensions/` in cycle 7 after the cycle 6 link check), and `HackableChest` collision.
+- [C] Document re-enabling `twilioquest-twilio-vr` in `docs/authoring/extension.md` (item 4) and sync `CLAUDE.md` / `HANDOFF.md` with cycle 10+11 changes.
 
 ## Backlog (ranked)
 
