@@ -48,6 +48,8 @@ const NOISE = [
   /Added Extension/i,
   /DevTools listening on/i,
   /Download the React DevTools/i,
+  /vaapi_wrapper\.cc/, // Chromium VA-API probe stderr on Linux
+  /quota_database\.cc/, // Chromium quota DB migration stderr
 ];
 const isNoise = text => NOISE.some(re => re.test(text));
 

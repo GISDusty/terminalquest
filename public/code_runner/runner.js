@@ -1,3 +1,5 @@
+const vm = require('vm');
+
 // Namespace for all code runner related modules and data - we are going to
 // use eval for now to execute the developer's code, so we'll keep our stuff
 // obfuscated in the global scope
@@ -142,7 +144,7 @@ require('electron').ipcRenderer.on('runWithEnv', (event, payload) => {
       ${code};
     `;
   try {
-    require('vm').runInThisContext(extendedUserCode, {
+    vm.runInThisContext(extendedUserCode, {
       filename: 'script.js',
     });
   } catch (e) {

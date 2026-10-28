@@ -170,6 +170,9 @@ function createCodeWindow(runnerHtmlPath) {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      // Electron 20+ sandboxes renderers by default; disable so the
+      // code runner can still use Node and Electron APIs.
+      sandbox: false
     },
     // Specifying the main window as the parent ensures it is closed and
     // cleaned up when the game window closes
@@ -245,7 +248,10 @@ function createWindow() {
     minHeight: 576,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      // Electron 20+ sandboxes renderers by default; disable so the
+      // app can still use Node and Electron APIs.
+      sandbox: false
     }
   });
   mainWindow.loadFile('public/index.html');

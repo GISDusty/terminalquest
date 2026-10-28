@@ -3,10 +3,11 @@
     [
       "@babel/preset-env",
       {
-        // Keep in sync with the electron version in package.json (Chromium 87,
-        // Node 12). Bump when upgrading Electron. Chromium runs async/await,
-        // classes, etc. natively, so they are not transformed.
-        "targets": { "electron": "11" }
+        // Keep in sync with the electron version in package.json
+        // (Electron 45 / Chromium 140 / Node 22). Bump when upgrading
+        // Electron. Chromium runs async/await, classes, etc. natively,
+        // so they are not transformed.
+        "targets": { "electron": "45" }
       }
     ],
     "@babel/react"
