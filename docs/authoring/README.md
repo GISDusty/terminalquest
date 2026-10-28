@@ -82,7 +82,7 @@ There are two places. Use the first.
    own repository, and a broken extension cannot damage the bundled lessons.
    External extensions are loaded before bundled ones.
 2. **`public/extensions/` in this repository.** This is where the bundled
-   lessons live (`twilioquest-base` and six others). You only need this to fix a
+   lessons live (`twilioquest-base` and seven others). You only need this to fix a
    bundled lesson or ship content with the game. A new extension here also has
    to be registered in `public/package.json`,
    `src/js/app/config/bundledExtensionModules.json` and the install step (see

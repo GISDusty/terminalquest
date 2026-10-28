@@ -39,14 +39,14 @@ Since then: `mise.toml` (Node 18, Python 3.9), `.npmrc` (`legacy-peer-deps=true`
 ### 3.1 Dependencies and tooling (Haiku audit)
 
 Versions are from `npm view` on 2026-10-25.
-- **electron ^11.5.0**: very old (latest is 45). The upgrade is large. Renderer code uses `remote` directly (see 3.3), and `electron-devtools-installer`, `electron-context-menu` and `electron-is-dev` would also need changes.
+- **electron ^11.5.0**: very old (latest is 45). The upgrade is large. Renderer code uses `remote` directly (see 3.3), and `electron-devtools-installer`, `electron-context-menu` and `electron-is-dev` would also need changes. (done in part: `remote`/`enableRemoteModule` replaced with IPC in cycle 11; the Electron version bump itself remains)
 - **node-sass ^8**: deprecated in favour of `sass`. The swap is small, since it only affects the `build:css` and `watch:css` scripts. Watch for `@import` and `/` division deprecation warnings (unverified). (done: swapped for sass, see docs/loop/STATE.md)
 - **jest/babel-jest 29.7** with `jest-environment-jsdom` 29 (jsdom 20) and `@testing-library/react` 12 (React 16 line): Enzyme and `@jest-runner/electron` are gone, so tests no longer depend on the Electron version. RTL 14+ is still to do, together with React 18.
 - **react/react-dom 16.8.6**, styled-components 5, electron-store 6, uuid 3, express 4, jimp 0.16, twilio 3: all stale. None is blocking right now.
 - **aws-sdk v2** and **firebase-admin 8**: used only by `tasks/` (voice-over generation, mission sync, release). They matter only if those tasks are revived. firebase-admin latest needs Node >= 22.
-- **vm2** is declared in `public/package.json` but is not imported anywhere, so it is likely removable.
+- **vm2** is declared in `public/package.json` but is not imported anywhere, so it is likely removable. (done: removed in cycle 5)
 - **The twilioquest-\* bundled content packages are all still published on npm.** `twilioquest-base` 8.1.0 is the pinned version. `twilioquest-dev-fundamentals` 2.4.0 was last published 2022. Whether their licenses allow redistribution in a fork was not checked.
-- Babel 7 with `transform-runtime corejs:2` is likely a blocker for Babel 8 (unverified).
+- Babel 7 with `transform-runtime corejs:2` is likely a blocker for Babel 8 (unverified). (done: dropped core-js 2 in cycle 10)
 
 ### 3.2 External services and content (Haiku audit)
 
@@ -63,10 +63,10 @@ All backend calls go to `twilioquest-prod.firebaseapp.com/quest/` (see `src/js/a
 
 ### 3.3 Code health (Haiku audit)
 
-- **Electron upgrade blockers:** `remote` from `electron` is used in about 7 files in `src/js` (`index.js`, `analytics.js`, `code_runner.js`, `App.jsx`, `Extensions.jsx`, `Settings.jsx` (unused import), `config.js`) plus `public/code_runner/runner.js`. `@electron/remote` is declared in `package.json` but never initialized, so it is a dead dependency. `nodeIntegration: true` is set in `main.js` and in the hidden code-runner window, and `contextIsolation` is not set anywhere. `electron-is-dev` is used in 8 files.
-- **Possible existing bug (unverified, not reproduced):** `public/code_runner/runner.js:41` uses `require('electron').remote`, but the runner window doesn't set `enableRemoteModule`.
+- **Electron upgrade blockers:** `remote` from `electron` is used in about 7 files in `src/js` (`index.js`, `analytics.js`, `code_runner.js`, `App.jsx`, `Extensions.jsx`, `Settings.jsx` (unused import), `config.js`) plus `public/code_runner/runner.js`. `@electron/remote` is declared in `package.json` but never initialized, so it is a dead dependency. `nodeIntegration: true` is set in `main.js` and in the hidden code-runner window, and `contextIsolation` is not set anywhere. `electron-is-dev` is used in 8 files. (done: `remote` replaced with IPC in cycle 11)
+- **Possible existing bug (unverified, not reproduced):** `public/code_runner/runner.js:41` uses `require('electron').remote`, but the runner window doesn't set `enableRemoteModule`. (done: fixed in cycle 4; the runner now uses IPC, done in cycle 11)
 - **Security posture:** user code runs with full Node access (`vm.runInThisContext`, `require` injected). Validators use Node's built-in `vm`, which is not a security boundary. There are 11 `dangerouslySetInnerHTML` sites (sanitization unverified), and extensions load via plain `require`. This is acceptable for a single-user local learning game, but it is not safe to treat as sandboxed.
-- **Tests:** 4 files and 39 cases (`assetLoader` 24, `extensions` 13, `analytics` 1, `Button` 1). Coverage is thin: `ValidationHelper`, `code_runner`, `context` and the game code are untested. The test suite has not been run in this session. **There is no CI:** commit `fadb7e4` removed all workflows.
+- **Tests:** 4 files and 39 cases (`assetLoader` 24, `extensions` 13, `analytics` 1, `Button` 1). Coverage is thin: `ValidationHelper`, `code_runner`, `context` and the game code are untested. The test suite has not been run in this session. **There is no CI:** commit `fadb7e4` removed all workflows. (done: tests now run under Jest 29 + jsdom, cycles 8–9; no CI yet)
 - **Dead code and TODOs:** `evalQuestIdeUserCode` in `ValidationHelper.js` (no callers), unused `public/lib/phaser-2.11.0.min.js`, and overdue 2020 TODOs in `context/schema.js` and `ContextProvider.jsx`. There are 42 class-component files against 14 using hooks. No removed React lifecycle APIs were found.
 - **Phaser 2.13.2:** loaded via a script tag, used in about 24 files, and central to `components/game/` (31 files) plus `common/tiled.js`. Replacing it would be a rewrite, not an upgrade.
 
@@ -74,7 +74,7 @@ All backend calls go to `twilioquest-prod.firebaseapp.com/quest/` (see `src/js/a
 
 Same caveat as above: not independently re-verified, except the two items marked "checked by me". Link checks were `curl -I` (HEAD) only, so 403/405 results are not confirmed dead.
 
-Where the content lives matters. The `dev_skills` level is in the repo (`public/levels/common/dev_skills`). Everything else is in npm packages under `public/node_modules/` and is wiped by a reinstall. Edits there do not survive. An external extension takes precedence over bundled ones for the same relative path (`assetLoader.js`), so fixes to bundled lessons can live in an external extension instead (see 3.5).
+Where the content lives matters. The `dev_skills` level is in the repo (`public/levels/common/dev_skills`; moved to `public/extensions/terminalquest-dev-skills` in cycle 7). Everything else is in npm packages under `public/node_modules/` and is wiped by a reinstall. Edits there do not survive. An external extension takes precedence over bundled ones for the same relative path (`assetLoader.js`), so fixes to bundled lessons can live in an external extension instead (see 3.5).
 
 Objectives that cannot be completed:
 - `dev_skills/terminal_script`: **checked by me.** `objective.json` asks for a `scriptPath`, but `validator.js` and `walkthrough.md` were byte-identical copies of `terminal_safety`'s and never read it. **Fixed (uncommitted, not yet tried in the game):** the new validator checks that the pasted path is a file, looks like a script (`.sh`/`.bash`/`.zsh`/`.ps1`/`.bat`/`.cmd` or a shebang) and contains an `echo`/`Write-Host`/`Write-Output` line. It strips surrounding quotes and expands `~`. It does not run the script. Tested with a mock helper against 8 cases (empty, missing, folder, good, quoted, no echo, wrong extension, shebang). The walkthrough was rewritten to teach scripts (Mac/Linux and Windows), and the placeholder now shows both path styles.

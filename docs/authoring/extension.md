@@ -179,15 +179,21 @@ bundled ones are wired:
    runs `npm ci` there instead (`tasks/install_app.js`), which will not add a
    new dependency.
 
-I have not walked through these four steps end to end (unverified); they are
-read from `public/package.json`, `bundledExtensionModules.json` and
+These four steps were verified end to end in cycle 7, when the
+`terminalquest-dev-skills` extension was added under
+`public/extensions/terminalquest-dev-skills`. They are also consistent with
+`public/package.json`, `bundledExtensionModules.json` and
 `getBundledExtensionDirectories`, which builds each path as
 `public/node_modules/<name>`.
 
 The twilio-account lessons (`twilioquest-twilio-vr`: API setup, voice and
 messaging) are not vendored and not in the bundled list, so they are not loaded.
-To bring them back you would need to vendor that package and register it with
-steps 1 to 4 (unverified).
+The package is still installed via `public/package.json`, which puts it at
+`public/node_modules/twilioquest-twilio-vr`. To re-enable it without touching
+its lessons, add `"twilioquest-twilio-vr"` to
+`src/js/app/config/bundledExtensionModules.json` and rebuild (`npm run
+build:js`). To also edit and vendor it in-repo, copy it into
+`public/extensions/` and follow steps 1 to 4.
 
 ## A starting point
 
