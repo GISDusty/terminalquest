@@ -1,4 +1,4 @@
-const isDev = require('electron-is-dev');
+const { isDev } = require('./electronBridge');
 
 /**
  * https://firebase.google.com/docs/projects/api-keys

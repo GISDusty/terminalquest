@@ -36,15 +36,12 @@ const ___cr___ = {
     };
   },
 
-  // helper function to send a log message back to other open windows
+  // helper function to send a log message back to the main process, which will
+  // broadcast it to every open window
   log(logLevel, args) {
-    const BrowserWindow = require('electron').remote.BrowserWindow;
-    const windows = BrowserWindow.getAllWindows();
-    windows.forEach(w => {
-      w.webContents.send('code_runner:log', {
-        logLevel,
-        arguments: Array.prototype.slice.call(args),
-      });
+    require('electron').ipcRenderer.send('code_runner:log', {
+      logLevel,
+      arguments: Array.prototype.slice.call(args),
     });
   },
 

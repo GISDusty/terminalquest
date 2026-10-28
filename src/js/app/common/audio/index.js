@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import path from 'path';
 import * as jetpack from 'fs-jetpack';
-import Store from 'electron-store';
+import Store from '../electronBridge';
 import { staticFilePath, staticFileUrl } from '../fs_utils';
 import TrackPlayer from './TrackPlayer';
 import { readDirectory, resolveAbsolutePath } from '../assetLoader';

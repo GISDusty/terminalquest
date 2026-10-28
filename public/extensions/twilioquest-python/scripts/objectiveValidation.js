@@ -1,9 +1,10 @@
 const { spawn } = require("child_process");
 const path = require("path");
-const { remote } = require("electron");
+const { ipcRenderer } = require("electron");
 const jetpack = require("fs-jetpack");
 
-const appDataPath = path.resolve(remote.app.getPath("appData"), "TwilioQuest");
+const { appDataPath: rawAppData } = ipcRenderer.sendSync("tq:get-app-meta");
+const appDataPath = path.resolve(rawAppData, "TerminalQuest");
 
 // Create a directory to house our python code validator
 const pythonValidatorPath = path.join(appDataPath, "python_validator");

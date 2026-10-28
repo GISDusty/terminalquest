@@ -1,11 +1,12 @@
 const path = require("path");
 const esprima = require("esprima");
 const { spawn } = require("child_process");
-const { remote } = require("electron");
+const { ipcRenderer } = require("electron");
 const jetpack = require("fs-jetpack");
 const { v4 } = require("uuid");
 
-const appDataPath = path.resolve(remote.app.getPath("appData"), "TwilioQuest");
+const { appDataPath: rawAppData } = ipcRenderer.sendSync("tq:get-app-meta");
+const appDataPath = path.resolve(rawAppData, "TerminalQuest");
 const codeStoragePath = path.join(appDataPath, "QuestIDE");
 
 // Create a directory to house our javascript code validator

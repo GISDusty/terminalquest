@@ -1,7 +1,7 @@
 import React from 'react';
 import * as jetpack from 'fs-jetpack';
 import db from '../common/database';
-import Store from 'electron-store';
+import Store from '../common/electronBridge';
 import Button from './Button';
 import config from '../config/config';
 import { describeSchema } from '../common/context/schema';

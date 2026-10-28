@@ -1,6 +1,6 @@
 import path from 'path';
 import { promises as fs } from 'fs';
-import isDev from 'electron-is-dev';
+import { isDev } from './electronBridge';
 import * as jetpack from 'fs-jetpack';
 import { removeDuplicates } from './utils';
 import {

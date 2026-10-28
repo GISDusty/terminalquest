@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { getAppMeta } from './electronBridge';
 
 // Analytics are disabled: Universal Analytics was shut down in 2023, so no hits
 // are sent anywhere. The module keeps its original API so callers
@@ -18,7 +18,7 @@ function initializeAnalytics(state) {
   } = state;
 
   // Get app version - will be electron version in dev, actual app version in prod
-  analytics.appVersion = remote.app.getVersion();
+  analytics.appVersion = getAppMeta().version;
   analytics.analyticsId = guid;
 }
 

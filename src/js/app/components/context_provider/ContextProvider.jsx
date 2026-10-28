@@ -1,5 +1,5 @@
 import React from 'react';
-import Store from 'electron-store';
+import Store from '../../common/electronBridge';
 import {
   context,
   getContext,

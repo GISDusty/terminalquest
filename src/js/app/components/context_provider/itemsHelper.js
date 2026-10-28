@@ -1,6 +1,6 @@
 import { getContext, setContext } from '../../common/context';
 import { reduceEntries } from '../../common/utils';
-const isDev = require('electron-is-dev');
+import { isDev } from '../../common/electronBridge';
 
 export function getItemFromKey(itemKey) {
   const items = getContext('items');

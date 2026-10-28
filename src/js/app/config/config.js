@@ -1,10 +1,11 @@
 import path from 'path';
-import { remote } from 'electron';
-import isDev from 'electron-is-dev';
+import { getAppMeta, isDev } from '../common/electronBridge';
 import bundledExtensionModules from './bundledExtensionModules.json';
 
-const appDataPath = path.resolve(remote.app.getPath('appData'), 'TerminalQuest');
-const userDataPath = path.resolve(remote.app.getPath('userData'));
+const { appDataPath: rawAppDataPath, userDataPath: rawUserDataPath } =
+  getAppMeta();
+const appDataPath = path.resolve(rawAppDataPath, 'TerminalQuest');
+const userDataPath = path.resolve(rawUserDataPath);
 const PRODUCTION_API_BASE_URL =
   'https://twilioquest-prod.firebaseapp.com/quest/';
 const DEV_API_BASE_URL = 'https://twilioquest-dev.firebaseapp.com/quest/';

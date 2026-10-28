@@ -2,16 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app/components/App';
 import audioManager from './app/common/audio/index';
-import isDev from 'electron-is-dev';
+import { isDev } from './app/common/electronBridge';
 import { syncBundledAssets } from './app/common/assetLoader';
 import extendYup from './app/common/extendYup';
-const { shell, remote } = require('electron');
+const { shell, ipcRenderer } = require('electron');
 import config from './app/config/config';
 
 extendYup();
 
 window.confirm = function(message) {
-  const buttonIdx = remote.dialog.showMessageBoxSync(null, {
+  const buttonIdx = ipcRenderer.sendSync('tq:show-message-box-sync', {
     type: 'question',
     buttons: ['OK', 'Cancel'],
     defaultId: 0,
@@ -23,7 +23,7 @@ window.confirm = function(message) {
 };
 
 window.alert = function(message) {
-  const buttonIdx = remote.dialog.showMessageBoxSync(null, {
+  const buttonIdx = ipcRenderer.sendSync('tq:show-message-box-sync', {
     type: 'warning',
     buttons: ['OK'],
     defaultId: 0,
@@ -103,81 +103,37 @@ if (spectorEnabled) {
   document.head.appendChild(script);
 }
 
-// Add Menu Items once game launches
-const { Menu, MenuItem } = remote;
-const applicationMenu = Menu.getApplicationMenu();
-const helpMenuItem = applicationMenu.items.find(
-  menuItem => menuItem.role === 'help'
-);
+// Ask the main process to add the game menu items once the game launches; the
+// main process builds the Help submenu, and dispatches actions back here.
+ipcRenderer.send('tq:setup-help-menu', {
+  spectorEnabled,
+  userDataPath: config.userDataPath,
+  saveFilePath: config.saveFilePath,
+});
 
-const devToolsLabel = 'Toggle Developer Tools';
-const devToolsItem = helpMenuItem.submenu.items.find(
-  item => item.label === devToolsLabel
-);
-
-if (!devToolsItem) {
-  helpMenuItem.submenu.append(
-    new MenuItem({
-      label: devToolsLabel,
-      click: () => {
-        console.warn(DEVTOOLS_WARNING);
-        remote.BrowserWindow.getFocusedWindow().webContents.toggleDevTools();
-      },
-    })
-  );
-
-  helpMenuItem.submenu.append(
-    new MenuItem({
-      label: 'Sync Bundled Assets',
-      click: async () => {
-        console.log('Syncing bundled assets...');
-        await syncBundledAssets();
-        console.log('Bundled assets synced!');
-      },
-    })
-  );
-
-  helpMenuItem.submenu.append(
-    new MenuItem({
-      label: 'Open User Data',
-      click: () => {
-        shell.openItem(config.userDataPath);
-      },
-    })
-  );
-
-  helpMenuItem.submenu.append(
-    new MenuItem({
-      label: 'Open Save File',
-      click: () => {
-        shell.openItem(config.saveFilePath);
-      },
-    })
-  );
-
-  if (spectorEnabled) {
-    helpMenuItem.submenu.append(
-      new MenuItem({
-        label: 'Show Spector.js UI',
-        click: () => {
-          spector.displayUI();
-        },
-      })
-    );
-
-    helpMenuItem.submenu.append(
-      new MenuItem({
-        label: 'Capture Frame with Spector.js',
-        click: () => {
-          console.log('Spector.js capture starting...');
-          spector.startCapture(document.querySelector('canvas'));
-        },
-      })
-    );
+ipcRenderer.on('tq:menu-action', async (event, action) => {
+  switch (action) {
+    case 'devtools-warning':
+      console.warn(DEVTOOLS_WARNING);
+      break;
+    case 'sync-bundled-assets':
+      console.log('Syncing bundled assets...');
+      await syncBundledAssets();
+      console.log('Bundled assets synced!');
+      break;
+    case 'spector-ui':
+      if (spector) {
+        spector.displayUI();
+      }
+      break;
+    case 'spector-capture':
+      if (spector) {
+        console.log('Spector.js capture starting...');
+        spector.startCapture(document.querySelector('canvas'));
+      }
+      break;
   }
-}
-
-Menu.setApplicationMenu(applicationMenu);
+});
 
 const appDependencies = {
   dom: {

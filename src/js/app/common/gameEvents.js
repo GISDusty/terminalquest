@@ -1,4 +1,4 @@
-import isDev from 'electron-is-dev';
+import { isDev } from './electronBridge';
 import config from '../config/config';
 import ga from './analytics';
 import { staticFilePath } from './fs_utils';

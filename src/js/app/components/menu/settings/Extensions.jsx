@@ -8,7 +8,7 @@ import {
 import Button from '../../Button';
 import InlineButton from './InlineButton';
 import InputTextField from './InputTextField';
-import { remote } from 'electron';
+const { ipcRenderer } = require('electron');
 
 async function getDirectoryPath({ defaultPath, buttonLabel, title }) {
   const dialogueOptions = {
@@ -22,7 +22,7 @@ async function getDirectoryPath({ defaultPath, buttonLabel, title }) {
     dialogueOptions.defaultPath = defaultPath;
   }
 
-  const result = await remote.dialog.showOpenDialog(dialogueOptions);
+  const result = await ipcRenderer.invoke('tq:show-open-dialog', dialogueOptions);
   return result.filePaths[0];
 }
 function ExtensionsList({ extensions }) {
