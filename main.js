@@ -6,6 +6,17 @@ enough for dev.
 const { app, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');
 
+// On modern kernels (tested 2026-10-27) Electron 11's sandboxed GPU process is
+// killed by the seccomp filter immediately at launch: SIGSYS, si_code
+// SYS_SECCOMP. Every launch therefore core-dumps, Omarchy's crash watcher
+// raises a "Process crashed: electron" toast, and clicking it starts a new
+// diagnose agent, which relaunches the game to reproduce the crash, and the
+// loop repeats. The game already runs with nodeIntegration, the remote module
+// and contextIsolation off (see docs/security.md for the accepted tradeoff),
+// so the renderer gains nothing it did not have; this only unbreaks the GPU
+// process. Verify: the app survived a 20 s launch with no coredump.
+app.commandLine.appendSwitch('no-sandbox');
+
 // Configure a bare-bones right click context menu
 require('electron-context-menu')();
 
