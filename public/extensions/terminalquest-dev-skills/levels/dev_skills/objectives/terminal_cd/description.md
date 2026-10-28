@@ -17,7 +17,7 @@ From your command line application, use the `mkdir` command to create a new fold
 mkdir quest
 ```
 
-The command above has created a new folder on your computer called `quest`! You can find it yourself in Windows Explorer or the Finder if you'd like.
+The command above has created a new folder on your computer called `quest`! You can find it yourself in Windows Explorer, the Finder on a Mac, or your Linux file manager if you'd like.
 
 Next, use the `cd` command to change your "current working directory" to the folder you just created.
 

@@ -4,7 +4,7 @@ Many people interact with a computer through a [graphical user interface](https:
 
 To create your own software, you will need to **give a computer lower-level instructions** than you usually do. Often, you will give your computer those lower-level instructions using a [command line interface](https://techterms.com/definition/command_line_interface), or **CLI** for short. A CLI is different from a GUI because instead of telling the computer what to do by clicking buttons, you type in **commands** which tell the computer what to do. A command then will often output text that conveys the result or information requested by your command.
 
-To clear this barrier, you'll need to launch a special application on your computer that provides a **comand line interface**. You'll then need to execute a command, and see what it gives you in response. It will look something like this.
+To clear this barrier, you'll need to launch a special application on your computer that provides a **command line interface**. You'll then need to execute a command, and see what it gives you in response. It will look something like this.
 
 ![terminal app PWD output](images/dev_skills/pwd.png)
 
@@ -42,6 +42,12 @@ On a Mac, the output of the `pwd` command might look something like this:
 /Users/kwhinnery
 ```
 
-In this case, there's only one line of output - that's the value you'll need for the text field on the right. To copy the text from the Terminal window, highlight the text with your mouse, click the _right_ mouse button, and select "Copy" from the menu.
+On a Linux computer, it might look like this:
 
-After you execute the `pwd` command, paste the **last line of the output** into the text field on the right and click *HACK* - TwilioQuest will validate that your path information is correct, and you can move on!
+```bash
+/home/kwhinnery
+```
+
+In this case, there's only one line of output - that's the value you'll need for the text field on the right. To copy the text from the Terminal window, highlight the text with your mouse, click the _right_ mouse button, and select "Copy" from the menu. On Linux, depending on your terminal, you may instead copy with a right-click and selecting "Copy" from the menu, or with the keyboard shortcut `Ctrl+Shift+C`.
+
+After you execute the `pwd` command, paste the **last line of the output** into the text field on the right and click *HACK* - TerminalQuest will validate that your path information is correct, and you can move on!

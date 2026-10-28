@@ -15,7 +15,7 @@ As a software developer, you will often need to create several files that contai
 
 ## Completing the Objective
 
-Open up your **command line application** - `Terminal` on the Mac, or `PowerShell` on Windows. 
+Open up your **command line application** - `Terminal` on a Mac or Linux, or `PowerShell` on Windows.
 
 What you need to do is:
 
