@@ -8,5 +8,6 @@
       "label": "Green Keycard holders ONLY allowed through this point."
     }
   ],
-  "rewards": {}
+  "rewards": {},
+  "hidden": true
 }
