@@ -4,15 +4,12 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-Cycle 11:
-- [A] Commit `main.js` `no-sandbox` fix (seccomp GPU crash on modern kernels) and Electron migration steps 1–4 (replace `remote` with IPC on Electron 11, drop `enableRemoteModule`).
-- [B] `terminalquest-dev-skills` audit & fixes: `terminal_cd` Linux gap, link check of `dev_skills` objectives (moved to `public/extensions/` in cycle 7 after the cycle 6 link check), and `HackableChest` collision.
-- [C] Document re-enabling `twilioquest-twilio-vr` in `docs/authoring/extension.md` (item 4) and sync `CLAUDE.md` / `HANDOFF.md` with cycle 10+11 changes.
+(nothing; cycle 11 finished. Next: Electron migration step 5, bumping Electron version now that `remote` and `enableRemoteModule` are gone.)
 
 ## Backlog (ranked)
 
-1. [A] `dev_skills`: essentially DONE in cycle 8 (see Done). Remaining: a human play-through of safety, cd and script; their validators haven't been run in the app. Also cosmetic: the chest has no collision. Original phase 2 note: play-test a real objective pass (pwd), then confirm the barrier opens and stays open after reload and that XP is awarded. Then the final chest, once the user decides. Also: Esc did not close the HackInterface under CDP key events; check whether that's a real bug.
-4. [B] DONE, verified at runtime in cycle 3: the Twilio-account missions are hidden. Over CDP, the 12 loaded levels do not include `basic_training`, `programmable_voice` or `twilio_messaging`, and the Mission Computer and nav map don't list them. To re-enable them, add `twilioquest-twilio-vr` to `bundledExtensionModules.json`; write that down in the authoring docs. Original note: API Setup, Voice, Messaging (decision 3). Audit finding: all three are in `twilioquest-twilio-vr` (`basic_training`, `programmable_voice`, `twilio_messaging`). That package is NOT in `bundledExtensionModules.json`, so it is probably never loaded, which would mean they are already hidden. Still to do: confirm at runtime that the Mission Computer does not list them, and record in docs how they would be re-enabled. Voice and Messaging have the prereq `basic_training.basic4`. No mission-level `hidden` flag exists; only objectives have `hidden`.
+1. [A] `dev_skills`: essentially DONE in cycle 8 (see Done). Remaining: a human play-through of safety, cd and script; their validators haven't been run in the app. Note on chest collision (audited in cycle 11): `HackableChest` does set `this.sprite.body.immovable = true` on its 24x24 body, and `EaseSpriteMovement` slides the player around corners of 24x24 sprites when not approached dead-center. Original phase 2 note: play-test a real objective pass (pwd), then confirm the barrier opens and stays open after reload and that XP is awarded. Then the final chest, once the user decides. Also: Esc did not close the HackInterface under CDP key events; check whether that's a real bug.
+4. [B] DONE, verified at runtime in cycle 3, and authoring docs updated in cycle 11 (`3ee5e77`): the Twilio-account missions are hidden. Over CDP, the 12 loaded levels do not include `basic_training`, `programmable_voice` or `twilio_messaging`, and the Mission Computer and nav map don't list them. `docs/authoring/extension.md` documents how to re-enable `twilioquest-twilio-vr` via `bundledExtensionModules.json`. Original note: API Setup, Voice, Messaging (decision 3). Audit finding: all three are in `twilioquest-twilio-vr` (`basic_training`, `programmable_voice`, `twilio_messaging`). That package is NOT in `bundledExtensionModules.json`, so it is probably never loaded, which would mean they are already hidden. Still to do: confirm at runtime that the Mission Computer does not list them, and record in docs how they would be re-enabled. Voice and Messaging have the prereq `basic_training.basic4`. No mission-level `hidden` flag exists; only objectives have `hidden`.
 5. [B] Cycle 4 findings. Every `twilio.com/quest/*` URL now returns 200 with the HTML page `github.com/TerminalQuest`.
    - `owl_plant_tree1`: already unreachable (not in any `objectives` manifest or map), marked `hidden` in the cycle 4 commit.
    - api-03-fetch: NOT completable, offline or online. The learner and the validator both fetch `twilio.com/quest/magic` for a phrase. Needs decision 2.
@@ -34,11 +31,8 @@ Cycle 11:
 9. [A] DONE in cycle 3. Original note: stale keys (`initialLevelName` -> `defaultLevelName` plus the `*Prologue` variants) and the dead `apiBaseUrl` (drop it; dev rewrites to the dev host anyway).
 9b. [A] DONE in cycle 3 (the task was retired). Still open: whether `tasks/create_release.js` handles the `public/node_modules` symlinks (node-tar, unverified). Original note: Retire or rewrite `tasks/update_bundled_extensions.js` (it runs `npm install <name>@latest` in `public/`, which would undo the vendoring). Check that `tasks/create_release.js` follows the `public/node_modules` symlinks (unverified).
 10. [C] DONE in cycle 3. Original note: security model, only enable extensions you wrote or read (decision 4).
-11. [B] Mostly DONE in cycle 6 (see Done). Remaining:
-   - 4 extension `README.md` files link to the 404 `github.com/twilio/twilioquest`;
-   - dead links with no replacement: boredapi (flavour text), open-pixel-art.com, yourfirstpr (both optional);
-   - leftover version samples (`Versions/3.7` Mac path, `Python 3.7.4` REPL banner, `git version 2.22.0`);
-   - `terminal_cd` Linux gap, which is in unloaded dev_skills.
+11. [B] DONE (cycles 6, 10, 11). Remaining optional items with no clear replacement:
+   - dead links with no replacement: boredapi (flavour text), open-pixel-art.com, yourfirstpr (both optional).
    Optional proposal: link the current Microsoft Store Python Install Manager (`apps.microsoft.com/detail/9nq7512cxl7t`) instead of the docs.python.org Windows page. Not verified.
 11-old. [B] Dead links (nodejs.org arg parsing x5, `github.com/twilio/twilioquest`, others in HANDOFF 3.4); Linux gaps (`js_node_workspace`, `terminal_cd`, `js_unlock_door`); `create_repo` git identity step; Python 3.7 text. Needs vendoring.
 12. [A] DONE in cycle 4 (see Done).
@@ -58,11 +52,11 @@ Cycle 11:
    - Both content scripts use `appData/TwilioQuest` while the app uses `appData/TerminalQuest`. This is harmless today, since validators only use it as a scratch folder (they never call `getCode`), but unify it during the migration.
    - ESM trap: `electron-store` 9+, `electron-is-dev` 3.0.1 and `electron-context-menu` 4+ are ESM-only. Pin 8.x, 3.0.0 and 3.x, or replace them with injected values.
    - Steps, each smoke-tested:
-     1. On Electron 11, add `ipcMain` handlers (paths and version via `additionalArguments`/`sendSync`; a sync message box via `sendSync`; an open-directory dialog; devtools; `shell.openPath`; Menu built in main).
-     2. Move code-runner window ownership to main, and relay its log.
-     3. Replace import-time paths and the library fallbacks.
-     4. Drop `enableRemoteModule`; a grep must find zero `remote`.
-     5. Bump Electron (target 45, latest), keeping `contextIsolation: false` explicit.
+     1. DONE in cycle 11 (`9743c7a`): On Electron 11, add `ipcMain` handlers (paths and version via `sendSync`; a sync message box via `sendSync`; an open-directory dialog; devtools; `shell.openPath`; Menu built in main).
+     2. DONE in cycle 11 (`9743c7a`): Move code-runner window ownership to main, and relay its log.
+     3. DONE in cycle 11 (`9743c7a`): Replace import-time paths and the library fallbacks (`src/js/app/common/electronBridge.js`).
+     4. DONE in cycle 11 (`9743c7a`): Drop `enableRemoteModule`; `noRemote.test.js` guards that zero `remote` references exist.
+     5. NEXT: Bump Electron (target 45, latest), keeping `contextIsolation: false` explicit, and remove unused `electron-is-dev`/`electron-store` wrappers if replaced.
      6. Bump the ESM-affected packages last.
    - Original note: Electron 11 -> current: preload + IPC instead of `remote` (app files, `public/code_runner/runner.js`, vendored `twilioquest-python/scripts/objectiveValidation.js`).
 16. [A] Node 18 -> current LTS.
@@ -162,6 +156,11 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - `36df898`..`34c0a3e` [B] text fixes: the 404 link in 4 extension READMEs now points to `TerminalQuest/terminalquest` (200); version samples (git 2.22.0, the Python 3.7 path and banner) are now version-neutral; the Python 30 s timer message said "five seconds" and now says thirty; 32 prose typos fixed (19 words). All 30 files are under `public/extensions`; 150 of 150 EJS renders were OK.
 
 - `4bc8730`, `4e43591` [A] Babel: `corejs: false`, preset-env `targets: {electron: '11'}` (bump this when Electron is upgraded), and `node: 'current'` for tests. `@babel/runtime-corejs2` and core-js 2 are removed. `public/app` has 0 `runtime-corejs2` imports (it had 1155). No polyfill-dependent code was found. A runtime check warped to fog_owl with 0 errors. The Mission Computer looks empty in a narrow window, but its DOM lists both missions, and it was the same before the change (orchestrator checked over CDP). Orchestrator ran `npm run verify`: 93/93, 0 console errors.
+
+- `e917517` [A] `main.js`: pass `--no-sandbox` (`app.commandLine.appendSwitch('no-sandbox')`) to prevent Electron 11's GPU process from being killed with `SIGSYS` (`SYS_SECCOMP`) on modern kernels.
+- `9743c7a` [A] **Electron `remote` and `enableRemoteModule` removed (Item 15, steps 1–4).** `main.js` now provides IPC handlers (`tq:get-app-meta`, `tq:show-message-box-sync`, `tq:show-open-dialog`, `tq:open-devtools`, `tq:setup-help-menu`) and owns the hidden QuestIDE code-runner window (`code_runner:init`, `code_runner:run`, `code_runner:log`), with `shell.openItem` replaced by `shell.openPath`. `src/js/app/common/electronBridge.js` supplies cached app metadata, `isDev`, and a `Conf`-backed `Store` class (replacing `electron-is-dev` and `electron-store`'s `remote.app` fallbacks in the renderer). Both vendored `objectiveValidation.js` scripts (`twilioquest-python` and `twilioquest-javascript`) now fetch `appDataPath` via `tq:get-app-meta` and unify `"TwilioQuest"` to `"TerminalQuest"`. `src/test/app/common/noRemote.test.js` guards against `remote` or `enableRemoteModule` reappearing. Verified via `npm run verify` (build OK, 97/97 tests across 9 suites, smoke OK, 0 console errors) plus a live CDP check confirming `require('electron').remote` is undefined, both `objectiveValidation.js` modules load, and `codeRunner.runCode('console.log("ipc-runner-ok", 42)', {})` delivers the log event back to the main window.
+- `493de55` [B] `terminalquest-dev-skills`: added Linux instructions alongside Mac and Windows in `terminal_cd/description.md`, `terminal_cd/walkthrough.md`, and `terminal_pwd/walkthrough.md` (plus fixed `comand` typo and `TwilioQuest` -> `TerminalQuest`). Also audited all 16 external URLs in `terminalquest-dev-skills`: 15 return 200 (the only 404 is the already-hidden `skills_plant_tree1` Firebase URL).
+- `3ee5e77` [C] Docs: updated `docs/authoring/extension.md` (item 4: how to re-enable `twilioquest-twilio-vr` via `bundledExtensionModules.json`, and marked the 4-step in-repo extension registration verified from cycle 7), `docs/authoring/README.md`, `CLAUDE.md`, and `HANDOFF.md`.
 
 ## Blocked
 
