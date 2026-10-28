@@ -4,7 +4,7 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
 
 ## In progress
 
-(nothing; cycle 11 finished. Next: Electron migration step 5, bumping Electron version now that `remote` and `enableRemoteModule` are gone.)
+(nothing; cycle 12 finished. Next: React 16 -> 18+ upgrade, item 17.)
 
 ## Backlog (ranked)
 
@@ -21,9 +21,9 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
    - `twilioquest-base/levels/challenge-questions/objectives/03-debugging-3/validator.js:76` uses `twilio.com/quest/ducktypium-diagnostics`.
    - `twilioquest-api-academy/scripts/config.js:5-6` uses `twilio.com/quest/magic` and `/magic/divination` (used by api-03, api-04 and api-05). `ValidationHelper.fetchOverride` already fakes `/quest/magic/divination` locally; check how far that covers these.
    Uncompletable objectives that remain: api-academy and base `/quest/magic` and `/quest/ducktypium-diagnostics` endpoints (03-debugging-3, api-03..05). `skills_plant_tree1` is moot, because it is in the unloaded dev_skills level.
-   - Cycle 2 audit, `green-keycard`: the objective is **unreferenced**. No map, level.json objective list or events file refers to it, so it is dead code that cannot block the player. Its validator is an empty stub and its walkthrough is a copy of Twilio account setup. Recommendation: leave it, or hide or remove it with approval. Keycard gating is actually done by `objects/keycard-terminal`, and the scientist conversation grants `green`.
+   - Cycle 2 audit, `green-keycard`: the objective is **unreferenced** in `level.json`, maps and events, and is now marked `"hidden": true` (`a7cfa61`) so task scripts (`tasks/utils/readLevels.js`) also skip it.
    - Cycle 2 audit, `07_sync_master`: `twilio-labs/open-pixel-art` exists, its default branch is `master` (checked with `git ls-remote`), and it did not look archived. The validator is completable as written.
-   - Lead to play-test (from code, unverified): on the JS `visitor-signin` map, 3 keycard terminals (ids 203, 204, 206) need `blue`. Nothing grants `blue`, and they have no `targetKey`, so they look like intentionally locked props. The green terminals 191 and 205 seem to rely on tileset default properties (`accessLevel: green`); I haven't confirmed the engine merges those. Confirm in a JS mission play-test.
+   - DONE in cycle 12 (`a7cfa61`): confirmed in code (`EntityFactory.js:47-66`) and locked in with unit tests (`src/test/app/components/game/entityFactory.test.js`) that on the JS `visitor-signin` map, green terminals 191 and 205 inherit `type: "keycard-terminal"` and default `accessLevel: "green"` from `TwilioQuestJavaScriptObjects.json` tile 2 while keeping `targetKey: "visitor-signin"`, and blue terminals 203, 204, 206 override `accessLevel: "blue"` as locked props.
 6. [A] Needs a play-test: drive a real objective through the hack UI to see the validator timeout and fail paths, and confirm game input resumes after a failed objective load.
 8. [A] DONE in cycle 3 (see Done). Original note: cloud sync (verify shows `user-sync` 404 on every launch), unlock codes, teams, live events. Also check why the dev build loads `spectorcdn.babylonjs.com/spector.bundle.js` (a cert error on every launch).
 7b. [A] DONE in cycle 4 (see Done). Original note: **The QuestIDE code runner may be broken (from code, unverified at runtime):** the hidden runner window (`common/code_runner.js:26-30`) sets only `nodeIntegration`, without `enableRemoteModule`, but `public/code_runner/runner.js:41` calls `require('electron').remote.BrowserWindow` in `log()`. On Electron 11, `remote` is off by default, so a learner's `console.log` may throw. Needs a runtime check (run code in the in-game editor) and then a fix. The Electron upgrade will replace this with IPC anyway.
@@ -56,15 +56,15 @@ Orchestrator state for the loop described in `LOOP_PROMPT.md`. Read at the start
      2. DONE in cycle 11 (`9743c7a`): Move code-runner window ownership to main, and relay its log.
      3. DONE in cycle 11 (`9743c7a`): Replace import-time paths and the library fallbacks (`src/js/app/common/electronBridge.js`).
      4. DONE in cycle 11 (`9743c7a`): Drop `enableRemoteModule`; `noRemote.test.js` guards that zero `remote` references exist.
-     5. NEXT: Bump Electron (target 45, latest), keeping `contextIsolation: false` explicit, and remove unused `electron-is-dev`/`electron-store` wrappers if replaced.
-     6. Bump the ESM-affected packages last.
+     5. DONE in cycle 12 (`131a428`, `5d094fb`): Bumped Electron to 45.1.0 (`sandbox: false`, `contextIsolation: false` explicit in `main.js`), `electron-context-menu` to 3.6.1, `electron-devtools-installer` to 3.2.1, `.babelrc` target to `electron: "45"`, declared `conf` directly in `public/package.json` and removed unused `electron-store` and `electron-is-dev`.
+     6. DONE in cycle 12 (`131a428`): CJS-compatible versions pinned/used (`electron-context-menu@^3.6.1`, `conf@^7.1.2`).
    - Original note: Electron 11 -> current: preload + IPC instead of `remote` (app files, `public/code_runner/runner.js`, vendored `twilioquest-python/scripts/objectiveValidation.js`).
-16. [A] Node 18 -> current LTS.
+16. [A] DONE in cycle 12 (`131a428`): Node 18 -> Node 24 LTS (`24.22.1` in `mise.toml` and `.nvmrc`), and unpinned `sass` to `^1.100.0` (`1.106.1`).
 17. [A] React 16 -> 18+ (after Enzyme is gone).
 18. [A] DONE in cycle 10 (`4bc8730`, `4e43591`).
 19a. DONE in cycle 9 (see Done). Original: `npm run scaffold:mission` writes to `public/levels/<name>/`, which is not loaded. Its `level.json` also has no `objectives` list, and it uses the old `entities/` layout. Point it at an extension (e.g. a user extension dir or a new in-repo `public/extensions/<name>`) and update the template. Registering a new in-repo extension takes 4 steps (unverified).
 19. [C] Authoring docs, including the Rust guide: DONE (cycles 6 and 8). Follow-up: test the guide against real `rustc`/`cargo` once Rust is installed. Original note: Authoring docs from upstream `extension-docs` and `twilioquest-extension-template`; Rust mission guide.
-20. [C] CI running `npm run verify` on the fork.
+20. [C] DONE in cycle 12 (`5935806`): `.github/workflows/verify.yml` runs `xvfb-run -a npm run verify` on `ubuntu-latest` for pushes to `revival`/`main` and PRs, and uploads `verify-output/` artifacts.
 
 ## Test baseline (2026-10-25, revival @ 22a60ee)
 
@@ -161,6 +161,11 @@ Run with a git-ignored `local_config.js`, with keystrokes injected over CDP. Sav
 - `9743c7a` [A] **Electron `remote` and `enableRemoteModule` removed (Item 15, steps 1–4).** `main.js` now provides IPC handlers (`tq:get-app-meta`, `tq:show-message-box-sync`, `tq:show-open-dialog`, `tq:open-devtools`, `tq:setup-help-menu`) and owns the hidden QuestIDE code-runner window (`code_runner:init`, `code_runner:run`, `code_runner:log`), with `shell.openItem` replaced by `shell.openPath`. `src/js/app/common/electronBridge.js` supplies cached app metadata, `isDev`, and a `Conf`-backed `Store` class (replacing `electron-is-dev` and `electron-store`'s `remote.app` fallbacks in the renderer). Both vendored `objectiveValidation.js` scripts (`twilioquest-python` and `twilioquest-javascript`) now fetch `appDataPath` via `tq:get-app-meta` and unify `"TwilioQuest"` to `"TerminalQuest"`. `src/test/app/common/noRemote.test.js` guards against `remote` or `enableRemoteModule` reappearing. Verified via `npm run verify` (build OK, 97/97 tests across 9 suites, smoke OK, 0 console errors) plus a live CDP check confirming `require('electron').remote` is undefined, both `objectiveValidation.js` modules load, and `codeRunner.runCode('console.log("ipc-runner-ok", 42)', {})` delivers the log event back to the main window.
 - `493de55` [B] `terminalquest-dev-skills`: added Linux instructions alongside Mac and Windows in `terminal_cd/description.md`, `terminal_cd/walkthrough.md`, and `terminal_pwd/walkthrough.md` (plus fixed `comand` typo and `TwilioQuest` -> `TerminalQuest`). Also audited all 16 external URLs in `terminalquest-dev-skills`: 15 return 200 (the only 404 is the already-hidden `skills_plant_tree1` Firebase URL).
 - `3ee5e77` [C] Docs: updated `docs/authoring/extension.md` (item 4: how to re-enable `twilioquest-twilio-vr` via `bundledExtensionModules.json`, and marked the 4-step in-repo extension registration verified from cycle 7), `docs/authoring/README.md`, `CLAUDE.md`, and `HANDOFF.md`.
+
+- `5d094fb` [A] `public/package.json`: declared `conf@^7.1.2` as a direct dependency and removed unused `electron-store` and `electron-is-dev` (3 packages removed from `public/package-lock.json`).
+- `131a428` [A] **Node 18 -> Node 24 LTS (`24.22.1`) and Electron 11 -> Electron 45 (`45.1.0`, Chromium 156, Node 24.22.1) (Items 15 & 16).** Updated `mise.toml` and `.nvmrc` to `24`; unpinned `sass` to `^1.100.0` (1.106.1); upgraded `electron` to `^45.1.0`, `electron-context-menu` to `^3.6.1`, and `electron-devtools-installer` to `^3.2.0` (3.2.1); set `sandbox: false` explicitly in `main.js` `BrowserWindow` `webPreferences`; updated `.babelrc` target to `electron: "45"`; moved `require('vm')` to the top of `public/code_runner/runner.js` before `duckPunch()` so Electron 45's one-time `vm` renderer warning does not pollute the learner's QuestIDE console; added VA-API/quota-migration stderr patterns to `tasks/verify.js` `NOISE`. Verified via `npm run verify` (build OK, 105/105 tests across 10 suites, smoke OK, 0 unexpected console errors, screenshot visually checked) and a live CDP check (`process.versions`: `electron: "45.1.0"`, `node: "24.22.1"`, `chrome: "156.0.8078.49"`, `codeRunner` log payload `["electron45-ok", "45.1.0", "24.22.1"]`).
+- `a7cfa61` [B] `twilioquest-javascript`: marked the unreferenced `green-keycard` stub objective `"hidden": true` and added `src/test/app/components/game/entityFactory.test.js` (8 tests) verifying `EntityFactory` + `TiledService` tileset property merging on `visitor-signin.json` (green terminals 191 & 205 and blue terminals 203, 204, 206) and `keycard-terminal/config.js` interactions.
+- `5935806`, `a7b1846` [C] Added `.github/workflows/verify.yml` (runs `xvfb-run -a npm run verify` on `ubuntu-latest` and uploads `verify-output/` artifacts) and updated `CLAUDE.md`, `HANDOFF.md`, `README.md`, and `docs/authoring/rust-mission.md`.
 
 ## Blocked
 
