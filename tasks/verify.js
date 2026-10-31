@@ -53,6 +53,26 @@ const NOISE = [
 ];
 const isNoise = text => NOISE.some(re => re.test(text));
 
+// Persist the Electron launch log to verify-output/electron.log.
+function writeElectronLog(electronLog) {
+  try {
+    fs.writeFileSync(
+      path.join(outDir, 'electron.log'),
+      electronLog.join('\n') + '\n'
+    );
+  } catch (err) {
+    console.error(`[verify] failed to write electron.log: ${err.message}`);
+  }
+}
+
+// Tail of the launch log, for embedding in error messages so the cause of an
+// early exit is immediately visible in CI output.
+const lastLogLines = electronLog =>
+  electronLog
+    .slice(-10)
+    .map(l => `  | ${l}`)
+    .join('\n');
+
 const summary = {
   build: null,
   tests: null,
@@ -326,11 +346,30 @@ async function runSmoke() {
   await waitForFreeWindow();
   backupSave();
 
-  const electronBin = require('electron');
   const electronLog = [];
+  try {
+    await runElectronSmoke(electronLog);
+  } finally {
+    // Always persist the Electron log, even if the smoke test throws early,
+    // so CI artifact uploads include the launch output.
+    writeElectronLog(electronLog);
+  }
+}
+
+async function runElectronSmoke(electronLog) {
+  const electronBin = require('electron');
   electronProc = spawn(
     electronBin,
-    ['.', `--remote-debugging-port=${port}`],
+    [
+      '.',
+      // Ubuntu 24.04 (GitHub Actions runners) blocks unprivileged user
+      // namespaces with AppArmor, which kills Electron's browser/zygote
+      // processes before main.js runs unless --no-sandbox is passed on the
+      // command line.
+      '--no-sandbox',
+      ...(process.env.CI ? ['--disable-gpu'] : []),
+      `--remote-debugging-port=${port}`,
+    ],
     {
       cwd: rootDir,
       detached: true,
@@ -353,7 +392,11 @@ async function runSmoke() {
   const deadline = Date.now() + startupTimeoutMs;
   let target = null;
   while (Date.now() < deadline && !target) {
-    if (exited) throw new Error('electron exited before the window appeared');
+    if (exited)
+      throw new Error(
+        'electron exited before the window appeared\n' +
+          lastLogLines(electronLog)
+      );
     try {
       const targets = await httpGetJson(`http://127.0.0.1:${port}/json`);
       target = targets.find(
@@ -410,7 +453,10 @@ async function runSmoke() {
   })()`;
   let state = null;
   while (Date.now() < deadline) {
-    if (exited) throw new Error('electron exited while loading');
+    if (exited)
+      throw new Error(
+        'electron exited while loading\n' + lastLogLines(electronLog)
+      );
     state = await evaluate(cdp, appExpr);
     if (state && state.ready && state.children > 0 && !state.loading) break;
     await sleep(500);
@@ -436,10 +482,7 @@ async function runSmoke() {
     .concat(electronLog.filter(l => /error|exception/i.test(l)))
     .filter(l => !isNoise(l));
   summary.consoleErrors = Array.from(new Set(unexpected));
-  fs.writeFileSync(
-    path.join(outDir, 'electron.log'),
-    electronLog.join('\n') + '\n'
-  );
+  writeElectronLog(electronLog);
   summary.smoke = !(strictConsole && summary.consoleErrors.length > 0);
 }
 
