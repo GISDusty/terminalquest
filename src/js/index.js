@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './app/components/App';
 import audioManager from './app/common/audio/index';
 import { isDev } from './app/common/electronBridge';
@@ -148,13 +148,21 @@ function areDependenciesLoaded() {
   return Object.values(appDependencies).every(dependency => dependency.loaded);
 }
 
-function attemptAppRender() {
-  if (areDependenciesLoaded()) {
-    // Mount React app on named DOM element
-    const appNode = document.getElementById('app');
+// With React 18, createRoot() must be called only once per DOM node, so guard
+// against re-mounting if attemptAppRender() runs more than once.
+let appMounted = false;
 
-    ReactDOM.render(<App />, appNode);
+function attemptAppRender() {
+  if (appMounted || !areDependenciesLoaded()) {
+    return;
   }
+
+  // Mount React app on named DOM element
+  const appNode = document.getElementById('app');
+
+  const root = createRoot(appNode);
+  root.render(<App />);
+  appMounted = true;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

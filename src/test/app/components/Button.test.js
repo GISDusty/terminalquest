@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import React, { useState } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import Button from '../../../js/app/components/Button';
+import ItemPopover from '../../../js/app/components/ItemPopover';
 
 test('Button component', () => {
   const { container } = render(<Button>Testing!</Button>);
@@ -30,5 +31,33 @@ describe('single React copy', () => {
     const { container } = render(<Counter />);
     fireEvent.click(container.firstChild);
     expect(container.firstChild.textContent).toBe('1');
+  });
+});
+
+describe('ItemPopover', () => {
+  const item = {
+    displayName: 'Test Item',
+    description: 'A test description.',
+    layerPath: 'avatars/parts/hat.png',
+  };
+
+  // ItemPopover captures `window.setTimeout` at module load time, so fake
+  // timers do not intercept its hover delay; use real timers and waitFor.
+  test('renders its child and opens the popover content on hover', async () => {
+    jest.useRealTimers();
+    const { container, getByText, queryByText } = render(
+      <ItemPopover item={item}>
+        <div>Hover target</div>
+      </ItemPopover>
+    );
+
+    expect(container.textContent).toContain('Hover target');
+    expect(queryByText('Test Item')).toBeNull();
+
+    // Hovering schedules the popover content to display after a 500ms delay
+    fireEvent.mouseEnter(container.firstChild);
+    await waitFor(() => expect(getByText('Test Item')).toBeTruthy());
+    expect(getByText('A test description.')).toBeTruthy();
+    expect(container.textContent).toContain('Hover target');
   });
 });

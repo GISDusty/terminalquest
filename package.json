@@ -17,7 +17,7 @@
     "generateVoiceOvers": "node tasks/generate_voice_overs/index.js",
     "scaffold:mission": "node tasks/scaffold/index.js",
     "sync:missions": "node tasks/sync_missions/index.js",
-    "launch": "electron .",
+    "launch": "electron --no-sandbox .",
     "build:all": "npm-run-all --parallel build:js build:css build:html",
     "build:js": "babel src/js -d public",
     "build:css": "sass --no-source-map src/scss/main.scss public/index.css",
@@ -59,7 +59,8 @@
   },
   "devDependencies": {
     "@actions/core": "^1.9.0",
-    "@testing-library/react": "12.1.5",
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/react": "^16.0.0",
     "babel-jest": "^29.7.0",
     "babel-plugin-inline-json-import": "^0.3.2",
     "command-line-args": "^5.1.1",

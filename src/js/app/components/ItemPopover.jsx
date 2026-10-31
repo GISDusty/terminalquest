@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Popover from 'react-tiny-popover';
+import { Popover } from 'react-tiny-popover';
 const { setTimeout, clearTimeout } = window;
 
 export default class ItemPopover extends React.Component {
@@ -40,7 +40,7 @@ export default class ItemPopover extends React.Component {
       <Popover
         isOpen={isHover}
         containerClassName="ItemPopover bg-light-gray black"
-        position="bottom"
+        positions={['bottom']}
         align="start"
         transitionDuration={0.01}
         content={
