@@ -9,10 +9,11 @@ risks"), so the safety rule below matters.
 
 ## What runs with full access
 
-The game window and the hidden code-runner window are both created with
-`nodeIntegration: true` and no `contextIsolation` (`main.js`,
-`src/js/app/common/code_runner.js`). Anything that runs in them can `require`
-any Node module, including `fs` and `child_process`.
+`main.js` creates both the main window and the hidden code-runner window
+(`public/code_runner/runner.html`) with `nodeIntegration: true`,
+`contextIsolation: false` and `sandbox: false`; `main.js` itself is launched
+with `--no-sandbox` (`src/js/app/common/code_runner.js`). Anything that runs
+in them can `require` any Node module, including `fs` and `child_process`.
 
 - **Extensions.** `.js` files are loaded with plain `require`
   (`requireFromExtension` in `src/js/app/common/assetLoader.js`).
@@ -79,20 +80,25 @@ Decision by the project owner, 2026-10-25: accept this model for a personal
 local game and document it. The accepted risks are:
 
 - no context isolation, with `nodeIntegration: true`
-- the Electron `remote` module (`enableRemoteModule: true` in `main.js`)
 - unsanitized HTML from content: 11 `dangerouslySetInnerHTML` sites render
   markdown, conversation text, item descriptions, toasts and validator
   feedback without sanitizing it
 - no sandbox for extensions, validators or learner code
 
-Network: the game has no required network calls for play. The old
-TwilioQuest backend no longer exists, but some code paths still try to reach
-a configured API URL (for example, progress sync after each save, and team or
-operation join codes) and Firebase (unlock codes). Progress sync catches its
-errors. Analytics and objective-complete event sends are commented out. Extensions can make any request they like.
+Network: the game has no required network calls for play.
+`config.backendEnabled` defaults to `false`
+(`src/js/app/common/backend.js`), which gates cloud sync, unlock codes,
+teams, operations and live events offline. Some disabled code paths would
+still try to reach a configured API URL (for example, progress sync after
+each save, and team or operation join codes) and Firebase (unlock codes).
+Progress sync catches its errors. Analytics and objective-complete event
+sends are commented out. Extensions can make any request they like.
 
-The planned Electron upgrade (preload scripts and IPC instead of `remote`)
-will change some of this. Update this document when it lands.
+Note on the Electron upgrade (cycles 11–12): Electron is now on 45 and the
+`remote` module / `enableRemoteModule` have been removed in favour of
+explicit IPC (`main.js`, `src/js/app/common/electronBridge.js`).
+`nodeIntegration: true` and `contextIsolation: false` remain **by design**
+for local validators and extensions.
 
 ## Out of scope
 

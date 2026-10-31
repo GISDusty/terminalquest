@@ -106,8 +106,11 @@ For the in-game JavaScript editor (QuestIDE, used when `show_ide` is true):
   `eval`. Avoid it.
 
 Twilio-specific (these need a Twilio account's credentials in the player's
-variables; the API-setup missions that used them are not loaded in this fork,
-so you will not need them):
+variables). `twilioquest-twilio-vr`, the dedicated API Setup, Voice and
+Messaging missions that used them, is **not** loaded in this fork;
+`twilioquest-api-academy` **is** loaded (its `inside_perimeter` mission
+still has optional Twilio-credential objectives), so you will likely not
+need them:
 
 - `getTwilioClient()`, `findPhoneNumber(number, client?)`,
   `createSignature(url, params, token)`, `fakeCall(...)`, `fakeMessage(...)`,
@@ -204,8 +207,12 @@ network call).
    missing, wrong type), give one clear message per failure, and finish with
    `helper.success`. The upstream template says the same.
 5. **Don't depend on the network.** The backend is off in this fork, and
-   `twilio.com/quest/...` URLs now return an unrelated web page. A validator
-   that fetches from them can never pass.
+   `twilio.com/quest/...` URLs no longer serve the original API over the
+   network. For the API Academy Lovelace Tower objectives (`api-03`, `api-04`,
+   `api-05`), `ValidationHelper.fetchOverride`
+   (`src/js/app/common/apiAcademyStubs.js`) provides offline local stand-ins
+   for those requests. New validators should not depend on external network
+   services.
 
 ## Testing a validator outside the game
 

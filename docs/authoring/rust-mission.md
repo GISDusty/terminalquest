@@ -19,8 +19,10 @@ When this was written, Rust was **not installed** on the author's machine
 install it. So:
 
 - Verified: the find, spawn, timeout, kill, escape and temp-folder logic, using
-  a stand-in script for `rustc` (`tools/fake_rustc.sh`). The same test passes on
-  Node 18 and on the Node inside Electron 11 (v12.18.3).
+  a stand-in script for `rustc` (`tools/fake_rustc.sh`). The same test passes
+  on Node 18 and on the Node inside Electron 11 (v12.18.3) — that is where it
+  was originally verified, when this guide was written in cycle 9; the game
+  runtime is now Node 24 LTS / Electron 45 (Node 24.22.1).
 - Verified: the extension, level and map load through the game's own loaders,
   and the level and its terminal appear in the running game.
 - **(unverified)** Anything that depends on real `rustc` or `cargo` output: the
@@ -86,11 +88,13 @@ Launched with `mise exec -- npx electron .` from a terminal, the renderer saw
 /home/dusty/.local/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
 ```
 
-`~/.cargo/bin` is not on it, `CARGO_HOME` is unset, and the renderer's Node is
-v12.18.3 (Electron 11.5.0). To simulate a launch from a desktop entry I started
-the Electron binary with only `PATH=/usr/local/bin:/usr/bin:/bin` (plus the
-display variables). The renderer saw exactly that. This machine has no desktop
-entry for the game, so that second launch is a simulation, not a real one.
+As of cycle 12, both `mise` and Electron 45 run Node 24.22.1 (`~/.cargo/bin`
+is still not on it, and `CARGO_HOME` is unset). To simulate a launch from a
+desktop entry I started the Electron binary with only
+`PATH=/usr/local/bin:/usr/bin:/bin` (plus the display variables). The renderer
+saw exactly that, and that desktop-launch `PATH` finding still applies. This
+machine has no desktop entry for the game, so that second launch is a
+simulation, not a real one.
 
 The lesson: `process.env.PATH` is whatever the launcher gave the game. A shell
 profile that adds `~/.cargo/bin` (rustup's installer edits profile files, from
@@ -359,8 +363,10 @@ I loaded the example with a temporary jest test (not committed) that runs the ap
 - `TiledService.registerMapFile` resolves both tilesets (the `.bundled/` lookup)
   and `getTileData(10013)` returns type `terminal` with `hackable: true`.
 
-And in the running game (Electron 11, a throwaway user-data folder, extension
-enabled there, never in your real settings), `window.warp('rust_intro',
+And in the running game (Electron 11 at the time this guide was written in
+cycle 9 — the runtime is now Electron 45 / Node 24; a throwaway user-data
+folder, extension enabled there, never in your real settings),
+`window.warp('rust_intro',
 'player_entry1', 'default')` showed the room with the terminal, the player and
 the VR background, and the quest title "Rust Intro: Hello, Ferris" in the HUD.
 After adding `events.js`, the console showed only warnings for this level
@@ -405,7 +411,9 @@ is left in the temp directory. `pgrep` is skipped on Windows.
 ### Results
 
 Run with the stand-in (`--fake`), on Node 18 and again under Electron 11's
-Node 12.18.3. Real `rustc` was not available, so rows 4 to 7 are checked
+Node 12.18.3 (these runs were recorded on Electron 11 / Node 18, when the
+guide was written in cycle 9; the runtime is now Electron 45 / Node
+24 LTS). Real `rustc` was not available, so rows 4 to 7 are checked
 against the stand-in's imitation of `rustc` (unverified against the real thing):
 
 ```
